@@ -1,5 +1,6 @@
-package com.nalbisoft.roborally.domain
+package pub.com.nalbisoft.roborally.domain
 
+import com.nalbisoft.roborally.domain.{Robot, Position, FactoryFloor, North}
 import org.specs2.mutable.Specification
 import org.specs2.specification.Scope
 
