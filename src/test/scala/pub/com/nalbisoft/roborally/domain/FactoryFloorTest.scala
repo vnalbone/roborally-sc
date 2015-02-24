@@ -1,6 +1,6 @@
 package pub.com.nalbisoft.roborally.domain
 
-import com.nalbisoft.roborally.domain.{Robot, Position, FactoryFloor, North}
+import com.nalbisoft.roborally.domain._
 
 import mock.com.nalbisoft.roborally.domain.TestData._
 
@@ -13,13 +13,13 @@ class FactoryFloorTest extends Specification {
   }
 
   class OneRobotScope extends Scope {
-    val startPos = Position(0, 0)
+    val startPos = Location(North, Position(0, 0))
     val floor = new FactoryFloor(1)
   }
 
   class TwoRobotScope extends Scope {
-    val  firstStartPos = Position(0, 0)
-    val secondStartPos = Position(10, 10)
+    val  firstStartPos = Location(North, Position(0, 0))
+    val secondStartPos = Location(South, Position(10, 10))
 
     val floor = new FactoryFloor(2)
   }
@@ -40,7 +40,7 @@ class FactoryFloorTest extends Specification {
     "throw an IllegalStateException if the board has no start positions" in new EmptyFactoryFloorScope() {
       floor.canAddMoreRobots must beFalse
 
-      floor.addRobot(new Robot("Bob"), SomePos) must throwAn[IllegalStateException]
+      floor.addRobot(new Robot("Bob"), SomeLoc) must throwAn[IllegalStateException]
     }
 
     "start that robot off at the proper start position based on the order it is added" in new TwoRobotScope {
@@ -48,26 +48,26 @@ class FactoryFloorTest extends Specification {
       val r2 = new Robot("Ernie")
 
       floor.addRobot(r1, firstStartPos)
-      floor.positionOf(r1) mustEqual firstStartPos
+      floor.locationOf(r1) mustEqual firstStartPos
 
       floor.addRobot(r2, secondStartPos)
-      floor.positionOf(r2) mustEqual secondStartPos
+      floor.locationOf(r2) mustEqual secondStartPos
 
-      floor.addRobot(new Robot("Darth Vader"), SomePos) must throwAn[IllegalStateException]
+      floor.addRobot(new Robot("Darth Vader"), SomeLoc) must throwAn[IllegalStateException]
     }
   }
 
   "Calling positionOf" should {
 
     "throw an IllegalArgumentException if the robot does not exist on the board" in new OneRobotScope {
-      floor.positionOf(new Robot("bogus robot")) must throwAn[IllegalArgumentException]
+      floor.locationOf(new Robot("bogus robot")) must throwAn[IllegalArgumentException]
     }
   }
 
   "Moving a robot" should {
 
     "throw an IllegalArgumentException if the robot does not exist on the board" in new OneRobotScope {
-      floor.moveRobot(new Robot("bogus robot"), 1, North) must throwAn[IllegalArgumentException]
+      floor.moveRobot(new Robot("bogus robot"), SomeLoc) must throwAn[IllegalArgumentException]
     }
 
     "correctly update the position of the robot moved while leaving the others alone" in new TwoRobotScope {
@@ -77,8 +77,10 @@ class FactoryFloorTest extends Specification {
       floor.addRobot(r1, firstStartPos)
       floor.addRobot(r2, secondStartPos)
 
-      floor.moveRobot(r1, 1, North)
-      floor.positionOf(r1) mustEqual Position(0, 1)
+      val newLoc = Location(East, Position(6, 6))
+
+      floor.moveRobot(r1, newLoc)
+      floor.locationOf(r1) mustEqual newLoc
     }
   }
 }

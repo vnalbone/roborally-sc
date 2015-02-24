@@ -2,8 +2,8 @@ package com.nalbisoft.roborally.domain
 
 class FactoryFloor(val maxRobots: Int) {
 
-  private var robotPos: Map[Robot, Position] = Map.empty
-  private def totalRobots: Int = robotPos.size
+  private var robotLoc: Map[Robot, Location] = Map.empty
+  private def totalRobots: Int = robotLoc.size
 
   /**
    * Returns true if there are any spots left to add robots
@@ -17,43 +17,40 @@ class FactoryFloor(val maxRobots: Int) {
    *
    * @param robot
    */
-  def addRobot(robot: Robot, startPos: Position) = {
+  def addRobot(robot: Robot, startPos: Location) = {
     if(!canAddMoreRobots) {
       throw new IllegalStateException(s"Cannot add any more robots as there is a max of $maxRobots")
     }
 
     val robotIndex = totalRobots
-    robotPos = robotPos + (robot -> startPos)
+    robotLoc = robotLoc + (robot -> startPos)
   }
 
   /**
    * Move the specified Robot an amount in a particular direction.
    *
    * @param robot
-   * @param amount
-   * @param direction
+   * @param newLoc
    */
-  def moveRobot(robot: Robot, amount: Int, direction: Direction) = {
-    if(!robotPos.contains(robot)) {
+  def moveRobot(robot: Robot, newLoc: Location) = {
+    if(!robotLoc.contains(robot)) {
       throw new IllegalArgumentException(s"Cannot move robot '${robot.name}' as it does not exist.")
     }
-    val currPos = robotPos(robot)
-    val newPos  = direction.applyMove(currPos, amount)
 
-    robotPos = robotPos + (robot -> newPos)
+    robotLoc = robotLoc + (robot -> newLoc)
   }
 
   /**
-   * Get the current position .of a Robot.
+   * Get the current Location .of a Robot.
    *
    * @param robot
    * @return
    */
-  def positionOf(robot: Robot): Position = {
-    if(!robotPos.contains(robot)) {
-      throw new IllegalArgumentException(s"Cannot get position of robot '${robot.name}' as it does not exist.")
+  def locationOf(robot: Robot): Location = {
+    if(!robotLoc.contains(robot)) {
+      throw new IllegalArgumentException(s"Cannot get Location of robot '${robot.name}' as it does not exist.")
     }
 
-    robotPos(robot)
+    robotLoc(robot)
   }
 }
