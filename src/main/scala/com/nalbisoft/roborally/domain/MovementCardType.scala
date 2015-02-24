@@ -1,54 +1,54 @@
 package com.nalbisoft.roborally.domain
 
 object Move1 extends MovementCardType {
-  override def applyMove(robot: Robot, dir: Direction, pos: Position): (Direction, Position) = {
-    val newPos = dir.applyMove(pos, 1)
-    (dir, newPos)
+  override def applyMove(robot: Robot, loc: Location): Location = {
+    val newPos = loc.dir.applyMove(loc.pos, 1)
+    loc.copy(pos = newPos)
   }
 }
 
 object Move2 extends MovementCardType {
-  override def applyMove(robot: Robot, dir: Direction, pos: Position): (Direction, Position) = {
-    val newPos = dir.applyMove(pos, 2)
-    (dir, newPos)
+  override def applyMove(robot: Robot, loc: Location): Location = {
+    val newPos = loc.dir.applyMove(loc.pos, 2)
+    loc.copy(pos = newPos)
   }
 }
 
 object Move3 extends MovementCardType {
-  override def applyMove(robot: Robot, dir: Direction, pos: Position): (Direction, Position) = {
-    val newPos = dir.applyMove(pos, 3)
-    (dir, newPos)
+  override def applyMove(robot: Robot, loc: Location): Location = {
+    val newPos = loc.dir.applyMove(loc.pos, 3)
+    loc.copy(pos = newPos)
   }
 }
 
 object BackUp extends MovementCardType {
-  override def applyMove(robot: Robot, dir: Direction, pos: Position): (Direction, Position) = {
-    val newPos = dir.applyMove(pos, -1)
-    (dir, newPos)
+  override def applyMove(robot: Robot, loc: Location): Location = {
+    val newPos = loc.dir.applyMove(loc.pos, -1)
+    loc.copy(pos = newPos)
   }
 }
 
 object UTurn extends MovementCardType {
-  override def applyMove(robot: Robot, dir: Direction, pos: Position): (Direction, Position) = {
-    val newDir = dir.turnAround
-    (newDir, pos)
+  override def applyMove(robot: Robot, loc: Location): Location = {
+    val newDir = loc.dir.turnAround
+    loc.copy(dir = newDir)
   }
 }
 
 object RotateRight extends MovementCardType {
-  override def applyMove(robot: Robot, dir: Direction, pos: Position): (Direction, Position) = {
-    val newDir = dir.turnRight
-    (newDir, pos)
+  override def applyMove(robot: Robot, loc: Location): Location = {
+    val newDir = loc.dir.turnRight
+    loc.copy(dir = newDir)
   }
 }
 
 object RotateLeft extends MovementCardType {
-  override def applyMove(robot: Robot, dir: Direction, pos: Position): (Direction, Position) = {
-    val newDir = dir.turnLeft
-    (newDir, pos)
+  override def applyMove(robot: Robot, loc: Location): Location = {
+    val newDir = loc.dir.turnLeft
+    loc.copy(dir = newDir)
   }
 }
 
 sealed abstract class MovementCardType {
-  def applyMove(robot: Robot, direction: Direction, position: Position): (Direction, Position)
+  def applyMove(robot: Robot, loc: Location): Location
 }
