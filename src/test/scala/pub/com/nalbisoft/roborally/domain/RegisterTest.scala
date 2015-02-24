@@ -1,5 +1,6 @@
 package pub.com.nalbisoft.roborally.domain
 
+import com.nalbisoft.roborally.domain.RegisterNumbers.One
 import com.nalbisoft.roborally.domain.{NotProgrammedException, Move1, Register}
 import mock.com.nalbisoft.roborally.domain.TestData._
 import mock.com.nalbisoft.roborally.domain.MockMovementCard
@@ -8,7 +9,7 @@ import org.specs2.specification.Scope
 
 class RegisterTest extends Specification {
   class RegisterScope extends Scope {
-    val register = new Register(1)
+    val register = new Register(One)
   }
 
   "Programming a register" should {
