@@ -44,6 +44,8 @@ class RegisterSet() {
   def isProgrammed(regNum: RegisterNumber) = registerAt(regNum).isProgrammed
 
   def programRegister(regNum: RegisterNumber, card: MovementCard) = registerAt(regNum).program(card)
+
+  def applyMove(regNum: RegisterNumber, robot: Robot, loc: Location) = registerAt(regNum).applyMove(robot, loc)
 }
 
 case class NotProgrammedException(number: RegisterNumber) extends Exception(s"Register $number not programmed")

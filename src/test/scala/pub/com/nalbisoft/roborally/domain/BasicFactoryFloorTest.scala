@@ -21,6 +21,9 @@ class BasicFactoryFloorTest extends Specification {
     val  firstStartPos = Location(North, Position(0, 0))
     val secondStartPos = Location(South, Position(10, 10))
 
+    var r1 = new Robot("Bert", new RegisterSet())
+    val r2 = new Robot("Ernie", new RegisterSet())
+
     val floor = new BasicFactoryFloor(2)
   }
 
@@ -40,39 +43,34 @@ class BasicFactoryFloorTest extends Specification {
     "throw an IllegalStateException if the board has no start positions" in new EmptyFactoryFloorScope() {
       floor.canAddMoreRobots must beFalse
 
-      floor.addRobot(new Robot("Bob"), SomeLoc) must throwAn[IllegalStateException]
+      floor.addRobot(SomeRobot, SomeLoc) must throwAn[IllegalStateException]
     }
 
     "start that robot off at the proper start position based on the order it is added" in new TwoRobotScope {
-      var r1 = new Robot("Bert")
-      val r2 = new Robot("Ernie")
-
       floor.addRobot(r1, firstStartPos)
       floor.locationOf(r1) mustEqual firstStartPos
 
       floor.addRobot(r2, secondStartPos)
       floor.locationOf(r2) mustEqual secondStartPos
 
-      floor.addRobot(new Robot("Darth Vader"), SomeLoc) must throwAn[IllegalStateException]
+      floor.addRobot(SomeRobot, SomeLoc) must throwAn[IllegalStateException]
     }
   }
 
   "Calling positionOf" should {
 
     "throw an IllegalArgumentException if the robot does not exist on the board" in new OneRobotScope {
-      floor.locationOf(new Robot("bogus robot")) must throwAn[IllegalArgumentException]
+      floor.locationOf(SomeRobot) must throwAn[IllegalArgumentException]
     }
   }
 
   "Moving a robot" should {
 
     "throw an IllegalArgumentException if the robot does not exist on the board" in new OneRobotScope {
-      floor.moveRobot(new Robot("bogus robot"), SomeLoc) must throwAn[IllegalArgumentException]
+      floor.moveRobot(SomeRobot, SomeLoc) must throwAn[IllegalArgumentException]
     }
 
     "correctly update the position of the robot moved while leaving the others alone" in new TwoRobotScope {
-      var r1 = new Robot("Bert")
-      val r2 = new Robot("Ernie")
 
       floor.addRobot(r1, firstStartPos)
       floor.addRobot(r2, secondStartPos)

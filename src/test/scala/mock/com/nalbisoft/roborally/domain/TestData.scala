@@ -10,7 +10,7 @@ object TestData {
   val  EastLoc = Location(East,  SomePos)
   val SouthLoc = Location(South, SomePos)
 
-  val SomeRobot = new Robot("Twonky")
+  val SomeRobot = new Robot("Twonky", new RegisterSet())
   val SomeMCard = MovementCard(100, Move1)
   val SomeLoc = SouthLoc
 }
