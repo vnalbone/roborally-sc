@@ -1,7 +1,7 @@
 package com.nalbisoft.roborally.domain
 
-class FactoryFloor(startPositions: Seq[Position]) {
-  private val maxRobots = startPositions.size
+class FactoryFloor(val maxRobots: Int) {
+
   private var robotPos: Map[Robot, Position] = Map.empty
   private def totalRobots: Int = robotPos.size
 
@@ -17,15 +17,13 @@ class FactoryFloor(startPositions: Seq[Position]) {
    *
    * @param robot
    */
-  def addRobot(robot: Robot) = {
+  def addRobot(robot: Robot, startPos: Position) = {
     if(!canAddMoreRobots) {
       throw new IllegalStateException(s"Cannot add any more robots as there is a max of $maxRobots")
     }
 
     val robotIndex = totalRobots
-    val initialPos = startPositions(robotIndex)
-
-    robotPos = robotPos + (robot -> initialPos)
+    robotPos = robotPos + (robot -> startPos)
   }
 
   /**
