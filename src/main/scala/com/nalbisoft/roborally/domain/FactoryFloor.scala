@@ -1,23 +1,45 @@
 package com.nalbisoft.roborally.domain
 
-class FactoryFloor(val maxRobots: Int) {
-
-  private var robotLoc: Map[Robot, Location] = Map.empty
-  private def totalRobots: Int = robotLoc.size
-
+trait FactoryFloor {
   /**
    * Returns true if there are any spots left to add robots
    *
    * @return
    */
-  def canAddMoreRobots: Boolean = totalRobots < maxRobots
+  def canAddMoreRobots: Boolean
 
   /**
    * Add a Robot to this board, if there are still available spots
    *
    * @param robot
    */
-  def addRobot(robot: Robot, startPos: Location) = {
+  def addRobot(robot: Robot, startPos: Location)
+
+  /**
+   * Move the specified Robot an amount in a particular direction.
+   *
+   * @param robot
+   * @param newLoc
+   */
+  def moveRobot(robot: Robot, newLoc: Location)
+
+  /**
+   * Get the current Location .of a Robot.
+   *
+   * @param robot
+   * @return
+   */
+  def locationOf(robot: Robot): Location
+}
+
+class BasicFactoryFloor(val maxRobots: Int) extends FactoryFloor {
+
+  private var robotLoc: Map[Robot, Location] = Map.empty
+  private def totalRobots: Int = robotLoc.size
+
+  override def canAddMoreRobots: Boolean = totalRobots < maxRobots
+
+  override def addRobot(robot: Robot, startPos: Location) = {
     if(!canAddMoreRobots) {
       throw new IllegalStateException(s"Cannot add any more robots as there is a max of $maxRobots")
     }
@@ -26,13 +48,7 @@ class FactoryFloor(val maxRobots: Int) {
     robotLoc = robotLoc + (robot -> startPos)
   }
 
-  /**
-   * Move the specified Robot an amount in a particular direction.
-   *
-   * @param robot
-   * @param newLoc
-   */
-  def moveRobot(robot: Robot, newLoc: Location) = {
+  override def moveRobot(robot: Robot, newLoc: Location) = {
     if(!robotLoc.contains(robot)) {
       throw new IllegalArgumentException(s"Cannot move robot '${robot.name}' as it does not exist.")
     }
@@ -40,13 +56,7 @@ class FactoryFloor(val maxRobots: Int) {
     robotLoc = robotLoc + (robot -> newLoc)
   }
 
-  /**
-   * Get the current Location .of a Robot.
-   *
-   * @param robot
-   * @return
-   */
-  def locationOf(robot: Robot): Location = {
+  override def locationOf(robot: Robot): Location = {
     if(!robotLoc.contains(robot)) {
       throw new IllegalArgumentException(s"Cannot get Location of robot '${robot.name}' as it does not exist.")
     }

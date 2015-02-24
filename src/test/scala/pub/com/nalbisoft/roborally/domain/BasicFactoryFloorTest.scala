@@ -7,21 +7,21 @@ import mock.com.nalbisoft.roborally.domain.TestData._
 import org.specs2.mutable.Specification
 import org.specs2.specification.Scope
 
-class FactoryFloorTest extends Specification {
+class BasicFactoryFloorTest extends Specification {
   class EmptyFactoryFloorScope extends Scope {
-    val floor = new FactoryFloor(0)
+    val floor = new BasicFactoryFloor(0)
   }
 
   class OneRobotScope extends Scope {
     val startPos = Location(North, Position(0, 0))
-    val floor = new FactoryFloor(1)
+    val floor = new BasicFactoryFloor(1)
   }
 
   class TwoRobotScope extends Scope {
     val  firstStartPos = Location(North, Position(0, 0))
     val secondStartPos = Location(South, Position(10, 10))
 
-    val floor = new FactoryFloor(2)
+    val floor = new BasicFactoryFloor(2)
   }
 
   "Creating a FactoryFloor" should {
