@@ -28,7 +28,7 @@ class RobotTest extends Specification {
     "tell the passed in FactoryFloor to move to the correct location" in new RobotScope {
       val mockFloor = MockFactoryFloor.newForLocationOf(Location(North, Position(5, 5)))
 
-      val card = new MovementCard(100, Move1)
+      val card = new ProgramCard(100, Move1)
       robot.program(One, card)
       robot.executeRegister(One, mockFloor)
 

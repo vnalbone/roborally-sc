@@ -1,7 +1,7 @@
 package com.nalbisoft.roborally.domain
 
-case class MovementCard(priority: Int, mType: MovementCardType) {
+case class ProgramCard(priority: Int, typ: ProgramCardType) {
   def applyMove(robot: Robot, loc: Location): Location = {
-    mType.applyMove(robot, loc)
+    typ.applyMove(robot, loc)
   }
 }

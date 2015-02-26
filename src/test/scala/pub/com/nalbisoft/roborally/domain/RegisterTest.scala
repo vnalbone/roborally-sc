@@ -3,7 +3,7 @@ package pub.com.nalbisoft.roborally.domain
 import com.nalbisoft.roborally.domain.RegisterNumbers.One
 import com.nalbisoft.roborally.domain.{NotProgrammedException, Move1, Register}
 import mock.com.nalbisoft.roborally.domain.TestData._
-import mock.com.nalbisoft.roborally.domain.MockMovementCard
+import mock.com.nalbisoft.roborally.domain.MockProgramCard
 import org.specs2.mutable.Specification
 import org.specs2.specification.Scope
 
@@ -13,7 +13,7 @@ class RegisterTest extends Specification {
   }
 
   "Programming a register" should {
-    "update programed card" in new RegisterScope {
+    "update programmed card" in new RegisterScope {
       register.isProgrammed must beFalse
       register.programmedCard must beNone
 
@@ -25,12 +25,12 @@ class RegisterTest extends Specification {
   }
 
   "Applying Register.move" should {
-    "throw NotProgrammedException when apply a move to an unprogrammed register" in  new RegisterScope {
+    "throw NotProgrammedException when apply a move to an un-programmed register" in  new RegisterScope {
       register.applyMove(SomeRobot, SomeLoc) must throwA[NotProgrammedException]
     }
 
-    "delegate the call to the MovementCard" in  new RegisterScope {
-      val mockCard = new MockMovementCard(1, Move1, NorthLoc)
+    "delegate the call to the ProgramCard" in  new RegisterScope {
+      val mockCard = new MockProgramCard(1, Move1, NorthLoc)
 
       register.program(mockCard)
 

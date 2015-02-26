@@ -4,7 +4,7 @@ import com.nalbisoft.roborally.domain._
 import org.specs2.mutable.Specification
 import mock.com.nalbisoft.roborally.domain.TestData._
 
-class MovementCardTypeTest extends Specification {
+class ProgramCardTypeTest extends Specification {
 
   "Move1" should {
     "move robot forward 1, increasing hPos by 1 while leaving the direction unchanged when facing North" in {

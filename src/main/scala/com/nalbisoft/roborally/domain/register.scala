@@ -15,13 +15,13 @@ object RegisterNumbers {
 sealed class RegisterNumber(val index: Int)
 
 class Register(val number: RegisterNumber) {
-  private var progCard: Option[MovementCard] = None
+  private var progCard: Option[ProgramCard] = None
 
   def isProgrammed = progCard.isDefined
 
   def programmedCard = progCard
 
-  def program(card: MovementCard) = {
+  def program(card: ProgramCard) = {
     progCard = Some(card)
   }
 
@@ -43,7 +43,7 @@ class RegisterSet() {
 
   def isProgrammed(regNum: RegisterNumber) = registerAt(regNum).isProgrammed
 
-  def programRegister(regNum: RegisterNumber, card: MovementCard) = registerAt(regNum).program(card)
+  def programRegister(regNum: RegisterNumber, card: ProgramCard) = registerAt(regNum).program(card)
 
   def applyMove(regNum: RegisterNumber, robot: Robot, loc: Location) = registerAt(regNum).applyMove(robot, loc)
 }

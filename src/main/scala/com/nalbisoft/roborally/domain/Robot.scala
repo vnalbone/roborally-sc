@@ -1,7 +1,7 @@
 package com.nalbisoft.roborally.domain
 
 class Robot(val name: String, regSet: RegisterSet) {
-  def program(regNum: RegisterNumber, card: MovementCard) = regSet.programRegister(regNum, card)
+  def program(regNum: RegisterNumber, card: ProgramCard) = regSet.programRegister(regNum, card)
 
   def executeRegister(regNum: RegisterNumber, floor: FactoryFloor) = {
     val currLoc = floor.locationOf(this)
