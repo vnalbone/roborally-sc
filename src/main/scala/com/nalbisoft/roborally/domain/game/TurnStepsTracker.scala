@@ -1,6 +1,6 @@
 package com.nalbisoft.roborally.domain.game
 
-class TurnSetupSteps(players: Set[Player]) {
+class TurnStepsTracker(players: Set[Player]) {
 
   def complete = allCardsDealt && allRegistersProgrammed && allPowerDownsAnnounced
 

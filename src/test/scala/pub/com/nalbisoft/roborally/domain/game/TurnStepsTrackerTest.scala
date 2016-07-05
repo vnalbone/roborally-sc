@@ -1,11 +1,11 @@
 package pub.com.nalbisoft.roborally.domain.game
 
-import com.nalbisoft.roborally.domain.game.{Player, TurnSetupSteps}
+import com.nalbisoft.roborally.domain.game.{Player, TurnStepsTracker}
 import mock.com.nalbisoft.roborally.domain.TestData._
 import org.specs2.mutable.Specification
 import org.specs2.specification.Scope
 
-class TurnSetupStepsTest extends Specification {
+class TurnStepsTrackerTest extends Specification {
   class PlayerScope extends Scope {
     val p1 = new Player("Foo", SomeRobot)
     val p2 = new Player("Bar", SomeOtherRobot)
@@ -14,7 +14,7 @@ class TurnSetupStepsTest extends Specification {
 
   "Doing turn setup" should {
     "cards should only be marked as dealt when all players have completed it" in new PlayerScope {
-      val setup = new TurnSetupSteps(players)
+      val setup = new TurnStepsTracker(players)
 
       setup.allCardsDealt must beFalse
 
@@ -26,7 +26,7 @@ class TurnSetupStepsTest extends Specification {
     }
 
     "registers should only be marked as programmed when all players have completed it" in new PlayerScope {
-      val setup = new TurnSetupSteps(players)
+      val setup = new TurnStepsTracker(players)
 
       setup.allRegistersProgrammed must beFalse
 
@@ -38,7 +38,7 @@ class TurnSetupStepsTest extends Specification {
     }
 
     "power downs should only be marked as announced when all players have completed it" in new PlayerScope {
-      val setup = new TurnSetupSteps(players)
+      val setup = new TurnStepsTracker(players)
 
       setup.allPowerDownsAnnounced must beFalse
 
@@ -50,7 +50,7 @@ class TurnSetupStepsTest extends Specification {
     }
 
     "setup should only be marked as complete when all players have completed all steps" in new PlayerScope {
-      val setup = new TurnSetupSteps(players)
+      val setup = new TurnStepsTracker(players)
 
       setup.complete must beFalse
 
