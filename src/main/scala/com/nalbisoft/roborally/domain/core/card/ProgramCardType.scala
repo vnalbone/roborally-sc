@@ -1,4 +1,6 @@
-package com.nalbisoft.roborally.domain
+package com.nalbisoft.roborally.domain.core.card
+
+import com.nalbisoft.roborally.domain.{Location, Robot}
 
 object Move1 extends ProgramCardType {
   override def applyMove(robot: Robot, loc: Location): Location = {

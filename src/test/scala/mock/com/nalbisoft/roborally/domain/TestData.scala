@@ -1,7 +1,8 @@
 package mock.com.nalbisoft.roborally.domain
 
 import com.nalbisoft.roborally.domain._
-import com.nalbisoft.roborally.domain.game.{ProgramCardSet, Player}
+import com.nalbisoft.roborally.domain.core.card._
+import com.nalbisoft.roborally.domain.game.{Player, ProgramCardSet}
 
 object TestData {
   val SomePos = Position(5, 5)

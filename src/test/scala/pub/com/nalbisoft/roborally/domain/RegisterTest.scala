@@ -1,7 +1,8 @@
 package pub.com.nalbisoft.roborally.domain
 
 import com.nalbisoft.roborally.domain.RegisterNumbers.One
-import com.nalbisoft.roborally.domain.{NotProgrammedException, Move1, Register}
+import com.nalbisoft.roborally.domain.core.card.Move1
+import com.nalbisoft.roborally.domain.{NotProgrammedException, Register}
 import mock.com.nalbisoft.roborally.domain.TestData._
 import mock.com.nalbisoft.roborally.domain.MockProgramCard
 import org.specs2.mutable.Specification

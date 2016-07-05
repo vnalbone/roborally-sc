@@ -2,9 +2,9 @@ package pub.com.nalbisoft.roborally.domain
 
 import com.nalbisoft.roborally.domain.RegisterNumbers.One
 import com.nalbisoft.roborally.domain._
+import com.nalbisoft.roborally.domain.core.card.{Move1, ProgramCard}
 import mock.com.nalbisoft.roborally.domain.MockFactoryFloor
 import mock.com.nalbisoft.roborally.domain.TestData._
-
 import org.specs2.mutable.Specification
 import org.specs2.specification.Scope
 

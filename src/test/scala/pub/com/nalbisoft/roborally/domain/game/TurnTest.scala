@@ -106,20 +106,20 @@ class TurnTest extends Specification {
 
   "A player" should {
 
-    "cannot get dealt cards twice" in new TurnScope {
+    "not be allowed to get dealt cards twice" in new TurnScope {
       turn.start()
       turn.dealCards(player)
       turn.dealCards(player) must throwAn[IllegalStateException]
     }
 
-    "cannot program registers twice" in new TurnScope {
+    "not be allowed to program registers twice" in new TurnScope {
       turn.start()
       turn.dealCards(player)
       turn.programRegisters(player, SomeProgramCardSet)
       turn.programRegisters(player, SomeProgramCardSet) must throwAn[IllegalStateException]
     }
 
-    "cannot announce power down twice" in new TurnScope {
+    "not be allowed to announce power down twice" in new TurnScope {
       turn.start()
       turn.dealCards(player)
       turn.programRegisters(player, SomeProgramCardSet)

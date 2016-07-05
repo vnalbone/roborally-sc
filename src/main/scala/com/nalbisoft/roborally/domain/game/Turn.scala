@@ -1,7 +1,8 @@
 package com.nalbisoft.roborally.domain.game
 
 import com.nalbisoft.roborally.domain.RegisterNumbers._
-import com.nalbisoft.roborally.domain.{FactoryFloor, ProgramCard, RegisterNumbers}
+import com.nalbisoft.roborally.domain.core.card.ProgramCard
+import com.nalbisoft.roborally.domain.{FactoryFloor, RegisterNumbers}
 
 class Turn(players: Set[Player], floor: FactoryFloor) {
   private var setup: TurnSetupSteps = new TurnSetupSteps(players)
@@ -11,7 +12,7 @@ class Turn(players: Set[Player], floor: FactoryFloor) {
 
   private var regNums = RegisterNumbers.asSeq.iterator
 
-  private val registerCompletionRule = new RegisterCompletionRules(players)
+//  private val registerCompletionRule = new RegisterCompletionRules(players)
 
   def start() = {
     turnStarted = true
@@ -59,11 +60,21 @@ class Turn(players: Set[Player], floor: FactoryFloor) {
     setup.completeAnnouncePowerDown(player)
   }
 
+  /*
+A. Reveal Program Cards
+B. Robots Move
+C. Board Elements Move
+D. Lasers Fire
+E. Touch Checkpoints
+   */
   def completeRegister() = {
     assertTurnActive()
     assertSetupComplete()
 
     if(registersComplete()) throw new IllegalStateException("All registers are already completed!")
+
+
+    //TODO complete register
   }
 
   def end() = {

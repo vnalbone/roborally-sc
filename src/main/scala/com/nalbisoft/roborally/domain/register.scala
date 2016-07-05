@@ -1,6 +1,7 @@
 package com.nalbisoft.roborally.domain
 
 import com.nalbisoft.roborally.domain.RegisterNumbers._
+import com.nalbisoft.roborally.domain.core.card.ProgramCard
 
 object RegisterNumbers {
   object One extends RegisterNumber(0)

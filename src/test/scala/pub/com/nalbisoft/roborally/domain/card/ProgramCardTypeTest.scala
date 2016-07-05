@@ -1,8 +1,9 @@
-package pub.com.nalbisoft.roborally.domain
+package pub.com.nalbisoft.roborally.domain.card
 
 import com.nalbisoft.roborally.domain._
-import org.specs2.mutable.Specification
+import com.nalbisoft.roborally.domain.core.card._
 import mock.com.nalbisoft.roborally.domain.TestData._
+import org.specs2.mutable.Specification
 
 class ProgramCardTypeTest extends Specification {
 
