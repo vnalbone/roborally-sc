@@ -1,6 +1,7 @@
-package pub.com.nalbisoft.roborally.domain.game
+package pub.com.nalbisoft.roborally.domain.game.turn
 
-import com.nalbisoft.roborally.domain.game.{Player, TurnStepsTracker}
+import com.nalbisoft.roborally.domain.game.Player
+import com.nalbisoft.roborally.domain.game.turn.TurnStepsTracker
 import mock.com.nalbisoft.roborally.domain.TestData._
 import org.specs2.mutable.Specification
 import org.specs2.specification.Scope

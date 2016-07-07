@@ -1,8 +1,11 @@
-package com.nalbisoft.roborally.domain.game
+package com.nalbisoft.roborally.domain.game.turn
 
 import com.nalbisoft.roborally.domain.RegisterNumbers._
 import com.nalbisoft.roborally.domain.core.card.{CardDeck, ProgramCard}
+import com.nalbisoft.roborally.domain.game.{GameException, Player, ProgramCardSet}
 import com.nalbisoft.roborally.domain.{FactoryFloor, RegisterNumbers}
+
+import scala.util.{Failure, Success, Try}
 
 /**
   * Overall Turn
@@ -16,7 +19,7 @@ import com.nalbisoft.roborally.domain.{FactoryFloor, RegisterNumbers}
   * @param players
   * @param floor
   */
-class Turn(players: Set[Player], floor: FactoryFloor) {
+class Turn(players: Set[Player], floor: FactoryFloor, stepFactory: TurnStepFactory) {
   private var setup: TurnStepsTracker = new TurnStepsTracker(players)
 
   private var turnStarted: Boolean = false
@@ -24,51 +27,73 @@ class Turn(players: Set[Player], floor: FactoryFloor) {
 
   private var regNums = RegisterNumbers.asSeq.iterator
 
+  private val dealCardsStep = stepFactory.createDealCardsStep
+
   def start() = {
     turnStarted = true
   }
 
-  private def playingGame(player: Player) = players.contains(player)
-
-  def dealCards(player: Player, deck: CardDeck): Seq[ProgramCard] = {
-    def assertDealCardsOk(player: Player) = {
-      assertTurnActive()
-      assertPlayerInGame(player)
-
-      if (setup.alreadyDealtCards(player)) throw new CardsAlreadyDealtException(player)
-    }
-
-    assertDealCardsOk(player)
-
-    setup.completeDealCards(player)
-
-    //TODO check to see how many cards to deal for player based on robot damange, etc.
-    val dealtCards = for (i <- 1 to 5) yield {
-      deck.next()
-    }
-
-    dealtCards
+  private def playingGame(player: Player) = {
+    players.contains(player)
   }
 
-  def programRegisters(player: Player, cards: ProgramCardSet) = {
-    def assertProgramRegisterOk(player: Player) = {
-      assertTurnActive()
-      assertPlayerInGame(player)
+  def dealCards(player: Player, deck: CardDeck): Try[Seq[ProgramCard]] = {
+    def assertDealCardsOk(player: Player): Try[Unit] = {
+      import com.nalbisoft.util.enrichers.EnrichedBoolean
 
-      if (!setup.allCardsDealt) throw new CardsNotDealtException
-      if (setup.alreadyProgrammedRegisters(player)) throw new RegistersAlreadyProgrammedException(player)
+      for (
+        _ <- assertTurnActive();
+        _ <- playingGame(player).toTry(new InvalidPlayerException(player));
+        _ <- (!setup.alreadyDealtCards(player)).toTry(new CardsAlreadyDealtException(player))
+      ) yield {}
     }
 
-    assertProgramRegisterOk(player)
+    for (
+      _ <- assertDealCardsOk(player);
+      dealtCards <- dealCardsStep.dealCards(player, deck)
+    ) yield {
+      setup.completeDealCards(player)
+      dealtCards
+    }
+  }
 
-    //TODO check for locked registers
-    player.robot.program(One, cards.card1)
-    player.robot.program(Two, cards.card2)
-    player.robot.program(Three, cards.card3)
-    player.robot.program(Four, cards.card4)
-    player.robot.program(Five, cards.card5)
+  def isDealCardsStepCompleted(player: Player): Boolean = {
+    setup.alreadyDealtCards(player)
+  }
 
-    setup.completeProgramRegisters(player)
+  def programRegisters(player: Player, cards: ProgramCardSet): Try[Unit] = {
+    def assertProgramRegisterOk(player: Player): Try[Unit] = {
+      def foo(player: Player): Try[Unit] = {
+        if (!setup.allCardsDealt) {
+          Failure(new CardsNotDealtException)
+        } else if (setup.alreadyProgrammedRegisters(player)) {
+          Failure(new RegistersAlreadyProgrammedException(player))
+        } else {
+          Success(())
+        }
+      }
+
+      import com.nalbisoft.util.enrichers.EnrichedBoolean
+
+      for (
+        _ <- assertTurnActive();
+        _ <- playingGame(player).toTry(new InvalidPlayerException(player));
+        _ <- foo(player)
+      ) yield {}
+    }
+
+    for (
+      _ <- assertProgramRegisterOk(player)
+    ) yield {
+      //TODO check for locked registers
+      player.robot.program(One, cards.card1)
+      player.robot.program(Two, cards.card2)
+      player.robot.program(Three, cards.card3)
+      player.robot.program(Four, cards.card4)
+      player.robot.program(Five, cards.card5)
+
+      setup.completeProgramRegisters(player)
+    }
   }
 
   //TODO Not implemented yet
@@ -129,13 +154,14 @@ class Turn(players: Set[Player], floor: FactoryFloor) {
     if(!setup.complete) throw new IllegalStateException("Setup is not complete!")
   }
 
-  private def assertTurnActive(): Unit = {
-    if (!turnStarted) throw new TurnNotStartedException
-    if (turnEnded) throw new TurnAlreadyEndedException
-  }
-
-  private def assertPlayerInGame(player: Player) = {
-    if (!playingGame(player)) throw new InvalidPlayerException(player)
+  private def assertTurnActive(): Try[Unit] = {
+    if (!turnStarted) {
+      Failure(new TurnNotStartedException)
+    } else if (turnEnded) {
+      Failure(new TurnAlreadyEndedException)
+    } else {
+      Success(())
+    }
   }
 }
 

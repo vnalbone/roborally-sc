@@ -1,23 +1,30 @@
-package pub.com.nalbisoft.roborally.domain.game
+package pub.com.nalbisoft.roborally.domain.game.turn
 
 import com.nalbisoft.roborally.domain.RegisterNumbers
 import com.nalbisoft.roborally.domain.core.card.CardDeck
 import com.nalbisoft.roborally.domain.game._
+import com.nalbisoft.roborally.domain.game.turn._
 import mock.com.nalbisoft.roborally.domain.MockCardDeck
 import mock.com.nalbisoft.roborally.domain.TestData._
-
+import mock.com.nalbisoft.test.{BaseSpecs2Test, GenericTestException}
 import org.specs2.mutable.Specification
 import org.specs2.specification.Scope
 
-class TurnTest extends Specification {
+import scala.util.{Failure, Success}
+
+class TurnTest extends BaseSpecs2Test {
   class TurnScope extends Scope {
-    val player = SomePlayer
-    val turn = new Turn(Set(player), SomeFloor)
+
     val cards = Seq(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low)
     val cardSet = new ProgramCardSet(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low)
-
     val deck = new MockCardDeck(cards)
+
+    val player = SomePlayer
     SomeFloor.addRobot(player.robot, SomeLoc)
+
+    val drawStep = new MockDealCardsStep(Success(cards))
+    val stepFactory = new StubTurnStepFactory().withNewDealCardsStep(drawStep)
+    val turn = new Turn(Set(player), SomeFloor, stepFactory)
   }
 
   //  "The order of the steps" should {
@@ -163,46 +170,61 @@ class TurnTest extends Specification {
   //    }
   //  }
 
-  "Dealing cards" should {
+  "Dealing cards step" should {
 
     "fail if turn is not active" in new TurnScope {
-      turn.dealCards(player, deck) must throwAn[TurnNotStartedException]
+      turn.dealCards(player, deck).rethrow must throwAn[TurnNotStartedException]
     }
 
     "fail if player is not part of the game" in new TurnScope {
       turn.start()
-      turn.dealCards(SomeOtherPlayer, deck) must throwAn[InvalidPlayerException]
+      turn.dealCards(SomeOtherPlayer, deck).rethrow must throwAn[InvalidPlayerException]
     }
 
     "fail if cards were already dealt" in new TurnScope {
       turn.start()
       turn.dealCards(player, deck)
-      turn.dealCards(player, deck) must throwAn[CardsAlreadyDealtException]
+      turn.dealCards(player, deck).rethrow must throwA[CardsAlreadyDealtException]
+    }
+
+    "remain incomplete if there is an error executing the step" in new TurnScope {
+      val failedStep = new MockDealCardsStep(Failure(GenericTestException))
+      val failedFactory = new StubTurnStepFactory().withNewDealCardsStep(failedStep)
+
+      val failedTurn = new Turn(Set(player), SomeFloor, failedFactory)
+
+      failedTurn.start()
+      val dealtCards = failedTurn.dealCards(player, deck)
+
+      dealtCards must beFailedTry(GenericTestException)
+      failedTurn.isDealCardsStepCompleted(player) must beFalse
     }
 
     "return top 5 cards from deck when robot is undamaged" in new TurnScope {
       turn.start()
       val dealtCards = turn.dealCards(player, deck)
-      dealtCards mustEqual cards
+
+      dealtCards must beSuccessfulTry(cards)
+      turn.isDealCardsStepCompleted(player) must beTrue
     }
   }
 
   "Programming registers" should {
     "fail if turn is not active" in new TurnScope {
-      turn.programRegisters(player, cardSet) must throwAn[TurnNotStartedException]
+      turn.programRegisters(player, cardSet).rethrow must throwAn[TurnNotStartedException]
     }
 
     "fail if player is not part of the game" in new TurnScope {
       turn.start()
       turn.dealCards(player, deck)
 
-      turn.programRegisters(SomeOtherPlayer, cardSet) must throwAn[InvalidPlayerException]
+      turn.programRegisters(SomeOtherPlayer, cardSet).rethrow must throwAn[InvalidPlayerException]
     }
 
     "fail if registers are programmed but cards were not dealt" in new TurnScope {
       turn.start()
 
-      turn.programRegisters(player, cardSet) must throwAn[CardsNotDealtException]
+      turn.programRegisters(player, cardSet).rethrow must throwAn[CardsNotDealtException]
     }
 
     "fail if registers were already programmed" in new TurnScope {
@@ -210,7 +232,7 @@ class TurnTest extends Specification {
       turn.dealCards(player, deck)
 
       turn.programRegisters(player, cardSet)
-      turn.programRegisters(player, cardSet) must throwAn[RegistersAlreadyProgrammedException]
+      turn.programRegisters(player, cardSet).rethrow must throwAn[RegistersAlreadyProgrammedException]
     }
 
     "have registers programmed in proper order when all goes well and no locked registers" in new TurnScope {
@@ -228,7 +250,6 @@ class TurnTest extends Specification {
       robot.registerAt(RegisterNumbers.Five) must beSome(cards(4))
     }
   }
-
 
   private def completeTurnSetup(player: Player, turn: Turn, deck: CardDeck) = {
     turn.start()

@@ -1,4 +1,6 @@
-package com.nalbisoft.roborally.domain.game
+package com.nalbisoft.roborally.domain.game.turn
+
+import com.nalbisoft.roborally.domain.game.Player
 
 class TurnStepsTracker(players: Set[Player]) {
 
