@@ -1,6 +1,7 @@
 package pub.com.nalbisoft.roborally.domain.game.turn
 
-import com.nalbisoft.roborally.domain.RegisterNumbers
+import com.nalbisoft.roborally.domain.RegisterNumbers._
+import com.nalbisoft.roborally.domain.{RegisterNumbers, RegisterSet}
 import com.nalbisoft.roborally.domain.core.card.CardDeck
 import com.nalbisoft.roborally.domain.game._
 import com.nalbisoft.roborally.domain.game.turn._
@@ -19,11 +20,19 @@ class TurnTest extends BaseSpecs2Test {
     val cardSet = new ProgramCardSet(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low)
     val deck = new MockCardDeck(cards)
 
+    val regSet = new RegisterSet()
+      .programRegister(One, Move1_Low)
+      .programRegister(Two, Move2_Low)
+      .programRegister(Three, Move3_Low)
+      .programRegister(Four, UTurn_Low)
+      .programRegister(Five, RotateRight_Low)
+
     val player = SomePlayer
     SomeFloor.addRobot(player.robot, SomeLoc)
 
     val drawStep = new MockDealCardsStep(Success(cards))
-    val stepFactory = new StubTurnStepFactory().withNewDealCardsStep(drawStep)
+    val progRegStep = new MockProgramRegistersStep(Success(regSet))
+    val stepFactory = new StubTurnStepFactory().withNewDealCardsStep(drawStep).withNewProgramRegistersStep(progRegStep)
     val turn = new Turn(Set(player), SomeFloor, stepFactory)
   }
 
@@ -235,19 +244,30 @@ class TurnTest extends BaseSpecs2Test {
       turn.programRegisters(player, cardSet).rethrow must throwAn[RegistersAlreadyProgrammedException]
     }
 
+    "remain incomplete if there is an error executing the step" in new TurnScope {
+      val failedStep = new MockProgramRegistersStep(Failure(GenericTestException))
+      val failedFactory = new StubTurnStepFactory()
+        .withNewDealCardsStep(new MockDealCardsStep(Success(Nil)))
+        .withNewProgramRegistersStep(failedStep)
+
+      val failedTurn = new Turn(Set(player), SomeFloor, failedFactory)
+
+      failedTurn.start()
+      val dealtCards = failedTurn.dealCards(player, deck)
+
+      failedTurn.programRegisters(player, cardSet) must beFailedTry(GenericTestException)
+
+      failedTurn.isProgramRegistersStepCompleted(player) must beFalse
+    }
+
     "have registers programmed in proper order when all goes well and no locked registers" in new TurnScope {
       turn.start()
       turn.dealCards(player, deck)
 
-      turn.programRegisters(player, cardSet)
+      val regResultTry = turn.programRegisters(player, cardSet)
 
-      val robot = player.robot
-
-      robot.registerAt(RegisterNumbers.One) must beSome(cards(0))
-      robot.registerAt(RegisterNumbers.Two) must beSome(cards(1))
-      robot.registerAt(RegisterNumbers.Three) must beSome(cards(2))
-      robot.registerAt(RegisterNumbers.Four) must beSome(cards(3))
-      robot.registerAt(RegisterNumbers.Five) must beSome(cards(4))
+      regResultTry must beSuccessfulTry
+      regResultTry.get mustEqual regSet
     }
   }
 

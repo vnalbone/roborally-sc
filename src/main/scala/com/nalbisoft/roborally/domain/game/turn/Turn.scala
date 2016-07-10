@@ -1,9 +1,8 @@
 package com.nalbisoft.roborally.domain.game.turn
 
-import com.nalbisoft.roborally.domain.RegisterNumbers._
 import com.nalbisoft.roborally.domain.core.card.{CardDeck, ProgramCard}
 import com.nalbisoft.roborally.domain.game.{GameException, Player, ProgramCardSet}
-import com.nalbisoft.roborally.domain.{FactoryFloor, RegisterNumbers}
+import com.nalbisoft.roborally.domain.{FactoryFloor, RegisterNumbers, RegisterSet}
 
 import scala.util.{Failure, Success, Try}
 
@@ -15,9 +14,6 @@ import scala.util.{Failure, Success, Try}
   * 4. Complete each register in order: execute the Program cards, complete board movements,
   * resolve all interactions, and touch flags and repair sites.
   * 5. Clean up any end-of-turn effects.
-  *
-  * @param players
-  * @param floor
   */
 class Turn(players: Set[Player], floor: FactoryFloor, stepFactory: TurnStepFactory) {
   private var setup: TurnStepsTracker = new TurnStepsTracker(players)
@@ -28,13 +24,10 @@ class Turn(players: Set[Player], floor: FactoryFloor, stepFactory: TurnStepFacto
   private var regNums = RegisterNumbers.asSeq.iterator
 
   private val dealCardsStep = stepFactory.createDealCardsStep
+  private val programRegistersStep = stepFactory.createProgramRegistersStep
 
   def start() = {
     turnStarted = true
-  }
-
-  private def playingGame(player: Player) = {
-    players.contains(player)
   }
 
   def dealCards(player: Player, deck: CardDeck): Try[Seq[ProgramCard]] = {
@@ -61,7 +54,7 @@ class Turn(players: Set[Player], floor: FactoryFloor, stepFactory: TurnStepFacto
     setup.alreadyDealtCards(player)
   }
 
-  def programRegisters(player: Player, cards: ProgramCardSet): Try[Unit] = {
+  def programRegisters(player: Player, cards: ProgramCardSet): Try[RegisterSet] = {
     def assertProgramRegisterOk(player: Player): Try[Unit] = {
       def foo(player: Player): Try[Unit] = {
         if (!setup.allCardsDealt) {
@@ -83,17 +76,16 @@ class Turn(players: Set[Player], floor: FactoryFloor, stepFactory: TurnStepFacto
     }
 
     for (
-      _ <- assertProgramRegisterOk(player)
+      _ <- assertProgramRegisterOk(player);
+      regSet <- programRegistersStep.programRegisters(player, cards)
     ) yield {
-      //TODO check for locked registers
-      player.robot.program(One, cards.card1)
-      player.robot.program(Two, cards.card2)
-      player.robot.program(Three, cards.card3)
-      player.robot.program(Four, cards.card4)
-      player.robot.program(Five, cards.card5)
-
       setup.completeProgramRegisters(player)
+      regSet
     }
+  }
+
+  def isProgramRegistersStepCompleted(player: Player): Boolean = {
+    setup.alreadyProgrammedRegisters(player)
   }
 
   //TODO Not implemented yet
@@ -125,7 +117,6 @@ class Turn(players: Set[Player], floor: FactoryFloor, stepFactory: TurnStepFacto
 
     if(registersComplete()) throw new IllegalStateException("All registers are already completed!")
 
-
     //TODO complete register
   }
 
@@ -144,6 +135,10 @@ class Turn(players: Set[Player], floor: FactoryFloor, stepFactory: TurnStepFacto
     //TODO do cleanup
 
     turnEnded = true
+  }
+
+  private def playingGame(player: Player) = {
+    players.contains(player)
   }
 
   private def registersComplete() = {

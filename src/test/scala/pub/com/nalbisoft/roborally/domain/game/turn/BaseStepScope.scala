@@ -1,5 +1,7 @@
 package pub.com.nalbisoft.roborally.domain.game.turn
 
+import com.nalbisoft.roborally.domain.RegisterNumbers._
+import com.nalbisoft.roborally.domain.RegisterSet
 import com.nalbisoft.roborally.domain.game.ProgramCardSet
 import com.nalbisoft.roborally.domain.game.turn.{Turn, TurnStepFactoryImpl}
 import mock.com.nalbisoft.roborally.domain.MockCardDeck

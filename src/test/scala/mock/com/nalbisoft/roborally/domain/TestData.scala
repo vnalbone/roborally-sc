@@ -1,5 +1,6 @@
 package mock.com.nalbisoft.roborally.domain
 
+import com.nalbisoft.roborally.domain.RegisterNumbers._
 import com.nalbisoft.roborally.domain._
 import com.nalbisoft.roborally.domain.core.card._
 import com.nalbisoft.roborally.domain.game.{Player, ProgramCardSet}
@@ -28,4 +29,10 @@ object TestData {
   val RotateLeft_Low = new ProgramCard(100, RotateLeft)
 
   val SomeProgramCardSet = ProgramCardSet(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateLeft_Low)
+  val SomeRegSet = new RegisterSet()
+    .programRegister(One, Move1_Low)
+    .programRegister(Two, Move2_Low)
+    .programRegister(Three, Move3_Low)
+    .programRegister(Four, UTurn_Low)
+    .programRegister(Five, RotateRight_Low)
 }

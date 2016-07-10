@@ -7,6 +7,8 @@ object Move1 extends ProgramCardType {
     val newPos = loc.dir.applyMove(loc.pos, 1)
     loc.copy(pos = newPos)
   }
+
+  override def toString: String = "Move1"
 }
 
 object Move2 extends ProgramCardType {
@@ -14,6 +16,8 @@ object Move2 extends ProgramCardType {
     val newPos = loc.dir.applyMove(loc.pos, 2)
     loc.copy(pos = newPos)
   }
+
+  override def toString: String = "Move2"
 }
 
 object Move3 extends ProgramCardType {
@@ -21,6 +25,8 @@ object Move3 extends ProgramCardType {
     val newPos = loc.dir.applyMove(loc.pos, 3)
     loc.copy(pos = newPos)
   }
+
+  override def toString: String = "Move3"
 }
 
 object BackUp extends ProgramCardType {
@@ -28,6 +34,8 @@ object BackUp extends ProgramCardType {
     val newPos = loc.dir.applyMove(loc.pos, -1)
     loc.copy(pos = newPos)
   }
+
+  override def toString: String = "BackUp"
 }
 
 object UTurn extends ProgramCardType {
@@ -35,6 +43,8 @@ object UTurn extends ProgramCardType {
     val newDir = loc.dir.turnAround
     loc.copy(dir = newDir)
   }
+
+  override def toString: String = "UTurn"
 }
 
 object RotateRight extends ProgramCardType {
@@ -42,6 +52,8 @@ object RotateRight extends ProgramCardType {
     val newDir = loc.dir.turnRight
     loc.copy(dir = newDir)
   }
+
+  override def toString: String = "RotateRight"
 }
 
 object RotateLeft extends ProgramCardType {
@@ -49,6 +61,8 @@ object RotateLeft extends ProgramCardType {
     val newDir = loc.dir.turnLeft
     loc.copy(dir = newDir)
   }
+
+  override def toString: String = "RotateLeft"
 }
 
 sealed abstract class ProgramCardType {
