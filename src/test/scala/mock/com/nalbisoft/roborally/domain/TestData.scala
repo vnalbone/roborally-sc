@@ -17,8 +17,8 @@ object TestData {
   val SomeOtherRobot = new Robot("Trundle Bot", new RegisterSet())
   val SomeMCard = ProgramCard(100, Move1)
   val SomeLoc = SouthLoc
-  val SomePlayer = new Player("Bob", SomeRobot)
-  val SomeOtherPlayer = new Player("John", SomeOtherRobot)
+  val SomePlayer = new Player("Bob")
+  val SomeOtherPlayer = new Player("John")
   val SomeFloor = new BasicFactoryFloor(8)
 
   val Move1_Low = new ProgramCard(100, Move1)

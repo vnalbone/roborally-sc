@@ -28,7 +28,7 @@ class TurnTest extends BaseSpecs2Test {
       .programRegister(Five, RotateRight_Low)
 
     val player = SomePlayer
-    SomeFloor.addRobot(player.robot, SomeLoc)
+    //    SomeFloor.addRobot(player.robot, SomeLoc)
 
     val drawStep = new MockDealCardsStep(Success(cards))
     val progRegStep = new MockProgramRegistersStep(Success(regSet))
