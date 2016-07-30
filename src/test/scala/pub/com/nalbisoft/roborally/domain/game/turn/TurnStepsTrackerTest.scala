@@ -1,7 +1,7 @@
 package pub.com.nalbisoft.roborally.domain.game.turn
 
 import com.nalbisoft.roborally.domain.game.{Player, PlayerId}
-import com.nalbisoft.roborally.domain.game.turn.TurnStepsTracker
+import com.nalbisoft.roborally.domain.game.game.turn.TurnStepsTracker
 import org.specs2.mutable.Specification
 import org.specs2.specification.Scope
 

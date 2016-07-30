@@ -1,4 +1,4 @@
-package com.nalbisoft.roborally.domain.game.turn
+package com.nalbisoft.roborally.domain.game.game
 
 import com.nalbisoft.roborally.domain.game.{GameException, Player}
 
@@ -9,15 +9,6 @@ object Game {
   val MAX_PLAYERS: Int = 8
 }
 
-trait PlayerQueue {
-  def playerAdded(player: Player)
-
-  def gameStarted()
-}
-
-trait PlayerQueueFactory {
-  def create: PlayerQueue
-}
 
 class Game(val queueFactory: PlayerQueueFactory) {
   var gameStarted: Boolean = false

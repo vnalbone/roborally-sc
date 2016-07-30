@@ -1,4 +1,4 @@
-package com.nalbisoft.roborally.domain.game.turn
+package com.nalbisoft.roborally.domain.game.game.turn
 
 trait TurnStepFactory {
   def createDealCardsStep: DealCardsStep

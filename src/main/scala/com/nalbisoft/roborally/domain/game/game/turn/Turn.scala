@@ -1,4 +1,4 @@
-package com.nalbisoft.roborally.domain.game.turn
+package com.nalbisoft.roborally.domain.game.game.turn
 
 import com.nalbisoft.roborally.domain.core.card.{CardDeck, ProgramCard}
 import com.nalbisoft.roborally.domain.game.{GameException, Player, ProgramCardSet}

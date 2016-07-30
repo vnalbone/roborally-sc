@@ -1,6 +1,6 @@
 package pub.com.nalbisoft.roborally.domain.game.turn
 
-import com.nalbisoft.roborally.domain.game.turn._
+import com.nalbisoft.roborally.domain.game.game.turn._
 
 import mock.com.nalbisoft.test.BaseSpecs2Test
 import mock.com.nalbisoft.roborally.domain.TestData._

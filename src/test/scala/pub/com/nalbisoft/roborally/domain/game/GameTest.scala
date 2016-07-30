@@ -1,29 +1,14 @@
 package pub.com.nalbisoft.roborally.domain.game
 
+import com.nalbisoft.roborally.domain.game.game._
 import com.nalbisoft.roborally.domain.game.{Player, PlayerId}
-import com.nalbisoft.roborally.domain.game.turn._
 import mock.com.nalbisoft.roborally.domain.TestData._
+import mock.com.nalbisoft.roborally.domain.game.{PlayerQueueFactoryStub, PlayerQueueSpy}
 import mock.com.nalbisoft.test.BaseSpecs2Test
 
-class PlayerQueueSpy extends PlayerQueue {
-  var addedPlayers: Seq[Player] = Nil
 
-  override def playerAdded(player: Player): Unit = {
-    addedPlayers = addedPlayers :+ player
-  }
 
-  var gameStartedCalled: Boolean = false
 
-  override def gameStarted(): Unit = {
-    gameStartedCalled = true
-  }
-}
-
-class PlayerQueueFactoryStub(spy: PlayerQueue) extends PlayerQueueFactory {
-  override def create: PlayerQueue = {
-    spy
-  }
-}
 
 class GameTest extends BaseSpecs2Test {
 
