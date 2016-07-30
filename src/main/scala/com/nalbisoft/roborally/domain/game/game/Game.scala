@@ -51,8 +51,6 @@ class Game(val queueFactory: GameQueueFactory) {
 
     Success(())
   }
-
-  def
 }
 
 case class NotEnoughPlayersException(num: Int) extends GameException(s"A game must have at least 2 players.  Currently there are only $num.")
