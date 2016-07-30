@@ -3,7 +3,7 @@ package pub.com.nalbisoft.roborally.domain.game
 import com.nalbisoft.roborally.domain.game.game._
 import com.nalbisoft.roborally.domain.game.{Player, PlayerId}
 import mock.com.nalbisoft.roborally.domain.TestData._
-import mock.com.nalbisoft.roborally.domain.game.{PlayerQueueFactoryStub, PlayerQueueSpy}
+import mock.com.nalbisoft.roborally.domain.game.{GameQueueFactoryStub, GameQueueSpy}
 import mock.com.nalbisoft.test.BaseSpecs2Test
 
 
@@ -13,16 +13,16 @@ import mock.com.nalbisoft.test.BaseSpecs2Test
 class GameTest extends BaseSpecs2Test {
 
   class NewGameScope extends Scope {
-    val queueSpy = new PlayerQueueSpy()
-    val game = new Game(new PlayerQueueFactoryStub(queueSpy))
+    val queueSpy = new GameQueueSpy()
+    val game = new Game(new GameQueueFactoryStub(queueSpy))
   }
 
   class ValidGameScope extends Scope {
     val player1 = SomePlayer
     val player2 = SomeOtherPlayer
 
-    val queueSpy = new PlayerQueueSpy()
-    val game = new Game(new PlayerQueueFactoryStub(queueSpy))
+    val queueSpy = new GameQueueSpy()
+    val game = new Game(new GameQueueFactoryStub(queueSpy))
 
     game.addPlayer(player1)
     game.addPlayer(player2)
@@ -69,7 +69,7 @@ class GameTest extends BaseSpecs2Test {
       Player(PlayerId(num.toString), num.toString)
     }
 
-    def testAddedPlayer(game: Game, num: Int, spy: PlayerQueueSpy) = {
+    def testAddedPlayer(game: Game, num: Int, spy: GameQueueSpy) = {
       val player = Player(PlayerId(num.toString), num.toString)
       game.addPlayer(player) must beSuccessfulTry
 

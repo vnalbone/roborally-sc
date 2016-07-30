@@ -1,9 +1,9 @@
 package mock.com.nalbisoft.roborally.domain.game
 
 import com.nalbisoft.roborally.domain.game.Player
-import com.nalbisoft.roborally.domain.game.game.PlayerQueue
+import com.nalbisoft.roborally.domain.game.game.GameQueue
 
-class PlayerQueueSpy extends PlayerQueue {
+class GameQueueSpy extends GameQueue {
   var addedPlayers: Seq[Player] = Nil
 
   override def playerAdded(player: Player): Unit = {
