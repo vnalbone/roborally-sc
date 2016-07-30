@@ -3,7 +3,7 @@ package mock.com.nalbisoft.roborally.domain
 import com.nalbisoft.roborally.domain.RegisterNumbers._
 import com.nalbisoft.roborally.domain._
 import com.nalbisoft.roborally.domain.core.card._
-import com.nalbisoft.roborally.domain.game.{Player, ProgramCardSet}
+import com.nalbisoft.roborally.domain.game.{Player, PlayerId, ProgramCardSet}
 
 object TestData {
   val SomePos = Position(5, 5)
@@ -17,8 +17,9 @@ object TestData {
   val SomeOtherRobot = new Robot("Trundle Bot", new RegisterSet())
   val SomeMCard = ProgramCard(100, Move1)
   val SomeLoc = SouthLoc
-  val SomePlayer = new Player("Bob")
-  val SomeOtherPlayer = new Player("John")
+  val SomePlayer = Player(PlayerId("1"), "Bob")
+  val SomeOtherPlayer = Player(PlayerId("2"), "John")
+  val YetAnotherPlayer = Player(PlayerId("3"), "Jim")
   val SomeFloor = new BasicFactoryFloor(8)
 
   val Move1_Low = new ProgramCard(100, Move1)
