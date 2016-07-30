@@ -1,17 +1,29 @@
 package com.nalbisoft.roborally.domain.game.turn
 
-import com.nalbisoft.roborally.domain.game.{GameException, Player, PlayerId}
+import com.nalbisoft.roborally.domain.game.{GameException, Player}
 
 import scala.util.{Failure, Success, Try}
 
 object Game {
-  val MAX_PLAYERS: Int = 8
   val MIN_PLAYERS: Int = 2
+  val MAX_PLAYERS: Int = 8
 }
 
-class Game {
+trait PlayerQueue {
+  def playerAdded(player: Player)
+
+  def gameStarted()
+}
+
+trait PlayerQueueFactory {
+  def create: PlayerQueue
+}
+
+class Game(val queueFactory: PlayerQueueFactory) {
   var gameStarted: Boolean = false
   var players: Seq[Player] = Nil
+
+  val queue = queueFactory.create
 
   def start: Try[Unit] = {
     if (gameStarted) {
@@ -23,6 +35,9 @@ class Game {
     }
 
     gameStarted = true
+
+    queue.gameStarted()
+
     Success(())
   }
 
@@ -40,14 +55,14 @@ class Game {
     }
 
     players = players :+ player
+
+    queue.playerAdded(player)
+
     Success(())
   }
 }
 
 case class NotEnoughPlayersException(num: Int) extends GameException(s"A game must have at least 2 players.  Currently there are only $num.")
-
 case class TooManyPlayersException() extends GameException(s"Too many players. A game can only have up to 8 players.")
-
 case class GameAlreadyStartedException() extends GameException("Cannot add players after a game has already been started.")
-
 case class DuplicatePlayerException(player: Player) extends GameException(s"Player ${player.name} with ID ${player.id} is already in the game.")
