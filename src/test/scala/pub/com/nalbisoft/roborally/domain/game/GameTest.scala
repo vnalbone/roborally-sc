@@ -1,31 +1,23 @@
 package pub.com.nalbisoft.roborally.domain.game
 
-import com.nalbisoft.roborally.domain.game.game._
-import com.nalbisoft.roborally.domain.game.{Player, PlayerId}
+import com.nalbisoft.roborally.domain.game.turn.{TurnFactory, TurnFactoryImpl}
+import com.nalbisoft.roborally.domain.game._
 import mock.com.nalbisoft.roborally.domain.TestData._
-import mock.com.nalbisoft.roborally.domain.game.{GameQueueFactoryStub, GameQueueSpy}
+import mock.com.nalbisoft.roborally.domain.game.TurnSpy
 import mock.com.nalbisoft.test.BaseSpecs2Test
-
-
-
-
+import pub.com.nalbisoft.roborally.domain.game.turn.StubTurnFactory
 
 class GameTest extends BaseSpecs2Test {
 
   class NewGameScope extends Scope {
-    val queueSpy = new GameQueueSpy()
-    val game = new Game(new GameQueueFactoryStub(queueSpy))
+    val game = new Game(SomeFloor, TurnFactoryImpl)
   }
 
   class ValidGameScope extends Scope {
     val player1 = SomePlayer
     val player2 = SomeOtherPlayer
 
-    val queueSpy = new GameQueueSpy()
-    val game = new Game(new GameQueueFactoryStub(queueSpy))
-
-    game.addPlayer(player1)
-    game.addPlayer(player2)
+    val game = newValidGame(player1, player2, TurnFactoryImpl)
   }
 
   "Adding a new player to a game" should {
@@ -55,28 +47,25 @@ class GameTest extends BaseSpecs2Test {
     }
 
     "add new players when game is not yet started" in new NewGameScope {
-      testAddedPlayer(game, 1, queueSpy)
-      testAddedPlayer(game, 2, queueSpy)
-      testAddedPlayer(game, 3, queueSpy)
-      testAddedPlayer(game, 4, queueSpy)
-      testAddedPlayer(game, 5, queueSpy)
-      testAddedPlayer(game, 6, queueSpy)
-      testAddedPlayer(game, 7, queueSpy)
-      testAddedPlayer(game, 8, queueSpy)
+      testAddedPlayer(game, 1)
+      testAddedPlayer(game, 2)
+      testAddedPlayer(game, 3)
+      testAddedPlayer(game, 4)
+      testAddedPlayer(game, 5)
+      testAddedPlayer(game, 6)
+      testAddedPlayer(game, 7)
+      testAddedPlayer(game, 8)
     }
 
     def newPlayer(num: Int) = {
       Player(PlayerId(num.toString), num.toString)
     }
 
-    def testAddedPlayer(game: Game, num: Int, spy: GameQueueSpy) = {
+    def testAddedPlayer(game: Game, num: Int) = {
       val player = Player(PlayerId(num.toString), num.toString)
       game.addPlayer(player) must beSuccessfulTry
 
       game.players must haveSize(num)
-
-      spy.addedPlayers must haveSize(num)
-      spy.addedPlayers(num - 1) mustEqual player
     }
   }
 
@@ -97,8 +86,37 @@ class GameTest extends BaseSpecs2Test {
     "complete successfully and have gameStarted == true" in new ValidGameScope {
       game.start must beSuccessfulTry
       game.gameStarted must beTrue
-
-      queueSpy.gameStartedCalled must beTrue
     }
+  }
+
+  "Starting a new turn" should {
+    "fail if the game isn't started yet" in new ValidGameScope {
+      game.startNewTurn().rethrow must throwA[GameNotStartedException]
+    }
+
+    "call start on new turn if it succeeds" in {
+      val turnSpy = new TurnSpy()
+      val tf = new StubTurnFactory(turnSpy)
+
+      val game = newValidGame(SomePlayer, SomeOtherPlayer, tf)
+
+      game.start
+      game.startNewTurn()
+
+      game.currentTurn must beSome(turnSpy)
+      game.turns must haveSize(1)
+      game.turns(0) mustEqual turnSpy
+
+      turnSpy.startCalled must beTrue
+    }
+  }
+
+  private def newValidGame(player1: Player, player2: Player, turnFactory: TurnFactory) = {
+    val game = new Game(SomeFloor, turnFactory)
+
+    game.addPlayer(player1)
+    game.addPlayer(player2)
+
+    game
   }
 }

@@ -1,4 +1,4 @@
-package com.nalbisoft.roborally.domain.game.game.turn
+package com.nalbisoft.roborally.domain.game.turn
 
 import com.nalbisoft.roborally.domain.RegisterSet
 import com.nalbisoft.roborally.domain.game.{Player, ProgramCardSet}

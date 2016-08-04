@@ -1,6 +1,6 @@
 package pub.com.nalbisoft.roborally.domain.game.turn
 
-import com.nalbisoft.roborally.domain.game.game.turn.DealCardsStepImpl
+import com.nalbisoft.roborally.domain.game.turn.DealCardsStepImpl
 import org.specs2.mutable.Specification
 
 class DealCardsStepImplTest extends Specification {

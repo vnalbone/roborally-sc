@@ -22,12 +22,12 @@ object TestData {
   val YetAnotherPlayer = Player(PlayerId("3"), "Jim")
   val SomeFloor = new BasicFactoryFloor(8)
 
-  val Move1_Low = new ProgramCard(100, Move1)
-  val Move2_Low = new ProgramCard(100, Move2)
-  val Move3_Low = new ProgramCard(100, Move3)
-  val UTurn_Low = new ProgramCard(100, UTurn)
-  val RotateRight_Low = new ProgramCard(100, RotateRight)
-  val RotateLeft_Low = new ProgramCard(100, RotateLeft)
+  val Move1_Low = ProgramCard(100, Move1)
+  val Move2_Low = ProgramCard(100, Move2)
+  val Move3_Low = ProgramCard(100, Move3)
+  val UTurn_Low = ProgramCard(100, UTurn)
+  val RotateRight_Low = ProgramCard(100, RotateRight)
+  val RotateLeft_Low = ProgramCard(100, RotateLeft)
 
   val SomeProgramCardSet = ProgramCardSet(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateLeft_Low)
   val SomeRegSet = new RegisterSet()

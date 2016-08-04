@@ -1,4 +1,4 @@
-package com.nalbisoft.roborally.domain.game.game.turn
+package com.nalbisoft.roborally.domain.game.turn
 
 import com.nalbisoft.roborally.domain.core.card.{CardDeck, ProgramCard}
 import com.nalbisoft.roborally.domain.game.{GameException, Player, ProgramCardSet}
@@ -15,7 +15,21 @@ import scala.util.{Failure, Success, Try}
   * resolve all interactions, and touch flags and repair sites.
   * 5. Clean up any end-of-turn effects.
   */
-class Turn(players: Set[Player], floor: FactoryFloor, stepFactory: TurnStepFactory) {
+
+trait Turn {
+  def start()
+
+  //  def dealCards(player: Player, deck: CardDeck): Try[Seq[ProgramCard]]
+  //  def isDealCardsStepCompleted(player: Player): Boolean
+  //
+  //  def programRegisters(player: Player, cards: ProgramCardSet): Try[RegisterSet]
+  //  def isProgramRegistersStepCompleted(player: Player): Boolean
+  //
+  //  def completeRegister()
+  //  def cleanUp()
+}
+
+class TurnImpl(players: Seq[Player], floor: FactoryFloor, stepFactory: TurnStepFactory) extends Turn {
   private var setup: TurnStepsTracker = new TurnStepsTracker(players)
 
   private var turnStarted: Boolean = false

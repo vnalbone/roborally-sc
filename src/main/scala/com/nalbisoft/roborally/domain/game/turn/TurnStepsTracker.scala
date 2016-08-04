@@ -1,8 +1,8 @@
-package com.nalbisoft.roborally.domain.game.game.turn
+package com.nalbisoft.roborally.domain.game.turn
 
 import com.nalbisoft.roborally.domain.game.Player
 
-class TurnStepsTracker(players: Set[Player]) {
+class TurnStepsTracker(players: Seq[Player]) {
 
   def complete = allCardsDealt && allRegistersProgrammed && allPowerDownsAnnounced
 

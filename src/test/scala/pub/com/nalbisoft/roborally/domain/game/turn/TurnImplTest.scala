@@ -4,7 +4,7 @@ import com.nalbisoft.roborally.domain.RegisterNumbers._
 import com.nalbisoft.roborally.domain.{RegisterNumbers, RegisterSet}
 import com.nalbisoft.roborally.domain.core.card.CardDeck
 import com.nalbisoft.roborally.domain.game._
-import com.nalbisoft.roborally.domain.game.game.turn._
+import com.nalbisoft.roborally.domain.game.turn._
 import mock.com.nalbisoft.roborally.domain.MockCardDeck
 import mock.com.nalbisoft.roborally.domain.TestData._
 import mock.com.nalbisoft.test.{BaseSpecs2Test, GenericTestException}
@@ -13,7 +13,7 @@ import org.specs2.specification.Scope
 
 import scala.util.{Failure, Success}
 
-class TurnTest extends BaseSpecs2Test {
+class TurnImplTest extends BaseSpecs2Test {
   class TurnScope extends Scope {
 
     val cards = Seq(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low)
@@ -33,7 +33,7 @@ class TurnTest extends BaseSpecs2Test {
     val drawStep = new MockDealCardsStep(Success(cards))
     val progRegStep = new MockProgramRegistersStep(Success(regSet))
     val stepFactory = new StubTurnStepFactory().withNewDealCardsStep(drawStep).withNewProgramRegistersStep(progRegStep)
-    val turn = new Turn(Set(player), SomeFloor, stepFactory)
+    val turn = new TurnImpl(Seq(player), SomeFloor, stepFactory)
   }
 
   //  "The order of the steps" should {
@@ -200,7 +200,7 @@ class TurnTest extends BaseSpecs2Test {
       val failedStep = new MockDealCardsStep(Failure(GenericTestException))
       val failedFactory = new StubTurnStepFactory().withNewDealCardsStep(failedStep)
 
-      val failedTurn = new Turn(Set(player), SomeFloor, failedFactory)
+      val failedTurn = new TurnImpl(Seq(player), SomeFloor, failedFactory)
 
       failedTurn.start()
       val dealtCards = failedTurn.dealCards(player, deck)
@@ -250,7 +250,7 @@ class TurnTest extends BaseSpecs2Test {
         .withNewDealCardsStep(new MockDealCardsStep(Success(Nil)))
         .withNewProgramRegistersStep(failedStep)
 
-      val failedTurn = new Turn(Set(player), SomeFloor, failedFactory)
+      val failedTurn = new TurnImpl(Seq(player), SomeFloor, failedFactory)
 
       failedTurn.start()
       val dealtCards = failedTurn.dealCards(player, deck)
@@ -271,14 +271,14 @@ class TurnTest extends BaseSpecs2Test {
     }
   }
 
-  private def completeTurnSetup(player: Player, turn: Turn, deck: CardDeck) = {
+  private def completeTurnSetup(player: Player, turn: TurnImpl, deck: CardDeck) = {
     turn.start()
     turn.dealCards(player, deck)
     turn.programRegisters(player, SomeProgramCardSet)
     //    turn.announcePowerDown(player, true)
   }
 
-  private def endTurn(player: Player, turn: Turn, deck: CardDeck) = {
+  private def endTurn(player: Player, turn: TurnImpl, deck: CardDeck) = {
     turn.start()
     turn.dealCards(player, deck)
     turn.programRegisters(player, SomeProgramCardSet)
