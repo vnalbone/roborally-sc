@@ -8,7 +8,7 @@ import mock.com.nalbisoft.roborally.domain.TestData._
 class ProgramRegisterStepImplTest extends BaseSpecs2Test {
 
   class ProgramRegisterStepScope extends BaseStepScope {
-    val step = new ProgramRegisterStepImpl()
+    val step = ProgramRegisterStepImpl
   }
 
   "Programming registers" should {

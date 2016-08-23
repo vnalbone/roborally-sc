@@ -6,7 +6,7 @@ import com.nalbisoft.roborally.domain.game.{Player, ProgramCardSet}
 
 import scala.util.{Success, Try}
 
-class ProgramRegisterStepImpl extends ProgramRegisterStep {
+case object ProgramRegisterStepImpl extends ProgramRegisterStep {
   override def programRegisters(player: Player, cards: ProgramCardSet): Try[RegisterSet] = {
     val regSet = new RegisterSet
 

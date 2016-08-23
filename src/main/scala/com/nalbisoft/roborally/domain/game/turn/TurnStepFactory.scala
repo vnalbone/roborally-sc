@@ -7,7 +7,7 @@ trait TurnStepFactory {
 }
 
 case object TurnStepFactoryImpl extends TurnStepFactory {
-  override def createDealCardsStep: DealCardsStep = new DealCardsStepImpl
+  override def createDealCardsStep: DealCardsStep = DealCardsStepImpl
 
-  override def createProgramRegistersStep: ProgramRegisterStep = new ProgramRegisterStepImpl
+  override def createProgramRegistersStep: ProgramRegisterStep = ProgramRegisterStepImpl
 }

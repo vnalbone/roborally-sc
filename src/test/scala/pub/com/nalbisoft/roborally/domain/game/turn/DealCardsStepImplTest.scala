@@ -6,7 +6,7 @@ import org.specs2.mutable.Specification
 class DealCardsStepImplTest extends Specification {
 
   class DrawCardsStepScope extends BaseStepScope {
-    val step = new DealCardsStepImpl()
+    val step = DealCardsStepImpl
   }
 
   "Dealing cards" should {
