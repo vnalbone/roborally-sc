@@ -10,9 +10,9 @@ class DealCardsStepImplTest extends Specification {
   }
 
   "Dealing cards" should {
-    "return top 5 cards from deck when robot is undamaged" in new DrawCardsStepScope {
+    "return top 9 cards from deck when robot is undamaged" in new DrawCardsStepScope {
       val dealtCards = step.dealCards(player, deck)
-      dealtCards must beSuccessfulTry(cards)
+      dealtCards must beSuccessfulTry(cards.take(9))
     }
   }
 }
