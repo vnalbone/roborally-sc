@@ -1,7 +1,7 @@
 package pub.com.nalbisoft.roborally.domain.game.turn
 
+import com.nalbisoft.roborally.domain.core.card.BasicCardDeck
 import com.nalbisoft.roborally.domain.game.ProgramCardSet
-import mock.com.nalbisoft.roborally.domain.MockCardDeck
 import mock.com.nalbisoft.roborally.domain.TestData._
 import org.specs2.specification.Scope
 
@@ -29,5 +29,5 @@ class BaseStepScope extends Scope {
     RotateRight_Low
   )
 
-  val deck = new MockCardDeck(cards)
+  val deck = new BasicCardDeck(cards)
 }

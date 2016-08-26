@@ -1,15 +1,12 @@
 package pub.com.nalbisoft.roborally.domain.game.turn
 
 import com.nalbisoft.roborally.domain.RegisterNumbers._
-import com.nalbisoft.roborally.domain.{RegisterNumbers, RegisterSet}
-import com.nalbisoft.roborally.domain.core.card.CardDeck
+import com.nalbisoft.roborally.domain.RegisterSet
+import com.nalbisoft.roborally.domain.core.card.{CardDeck, BasicCardDeck}
 import com.nalbisoft.roborally.domain.game._
 import com.nalbisoft.roborally.domain.game.turn._
-import mock.com.nalbisoft.roborally.domain.MockCardDeck
 import mock.com.nalbisoft.roborally.domain.TestData._
 import mock.com.nalbisoft.test.{BaseSpecs2Test, GenericTestException}
-import org.specs2.mutable.Specification
-import org.specs2.specification.Scope
 
 import scala.util.{Failure, Success}
 
@@ -17,8 +14,8 @@ class TurnImplTest extends BaseSpecs2Test {
   class TurnScope extends Scope {
 
     val cards = Seq(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low)
-    val cardSet = new ProgramCardSet(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low)
-    val deck = new MockCardDeck(cards)
+    val cardSet = ProgramCardSet(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low)
+    val deck = new BasicCardDeck(cards)
 
     val regSet = new RegisterSet()
       .programRegister(One, Move1_Low)
