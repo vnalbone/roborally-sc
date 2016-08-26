@@ -57,12 +57,12 @@ class GameTest extends BaseSpecs2Test {
       testAddedPlayer(game, 8)
     }
 
-    def newPlayer(num: Int) = {
-      Player(PlayerId(num.toString), num.toString)
+    def newPlayer(num: Int): PlayerImpl = {
+      PlayerImpl(PlayerId(num.toString), num.toString)
     }
 
     def testAddedPlayer(game: Game, num: Int) = {
-      val player = Player(PlayerId(num.toString), num.toString)
+      val player = PlayerImpl(PlayerId(num.toString), num.toString)
       game.addPlayer(player) must beSuccessfulTry
 
       game.players must haveSize(num)

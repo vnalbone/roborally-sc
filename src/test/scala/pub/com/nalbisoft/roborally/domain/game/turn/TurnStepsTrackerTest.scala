@@ -1,14 +1,14 @@
 package pub.com.nalbisoft.roborally.domain.game.turn
 
-import com.nalbisoft.roborally.domain.game.{Player, PlayerId}
+import com.nalbisoft.roborally.domain.game.{Player, PlayerId, PlayerImpl}
 import com.nalbisoft.roborally.domain.game.turn.TurnStepsTracker
 import org.specs2.mutable.Specification
 import org.specs2.specification.Scope
 
 class TurnStepsTrackerTest extends Specification {
   class PlayerScope extends Scope {
-    val p1 = Player(PlayerId("1"), "Foo")
-    val p2 = Player(PlayerId("2"), "Bar")
+    val p1 = PlayerImpl(PlayerId("1"), "Foo")
+    val p2 = PlayerImpl(PlayerId("2"), "Bar")
     val players = Seq(p1, p2)
   }
 
