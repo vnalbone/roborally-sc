@@ -35,6 +35,30 @@ class BasicCardDeckTest extends BaseSpecs2Test {
     }
   }
 
+  "Shuffling cards" should {
+    "do nothing when deck is empty" in {
+      val deck = new BasicCardDeck(Nil)
+
+      deck.count mustEqual 0
+      deck.shuffle()
+      deck.count mustEqual 0
+    }
+
+    "reset the count" in new CardScope {
+
+      deck.count mustEqual 4
+      deck.next()
+      deck.count mustEqual 3
+      deck.next()
+      deck.count mustEqual 2
+
+      deck.shuffle()
+      deck.count mustEqual 4
+
+      //TODO How do I test that cards are actually shuffled?
+    }
+  }
+
   "Calling next without shuffling cards" should {
     "fail with a DeckEmptyException if there are no more cards" in {
       val deck = new BasicCardDeck(Nil)
@@ -42,10 +66,15 @@ class BasicCardDeckTest extends BaseSpecs2Test {
     }
 
     "return cards in their original order" in new CardScope {
+      deck.count mustEqual 4
       deck.next() mustEqual Move1_Low
+      deck.count mustEqual 3
       deck.next() mustEqual Move2_Low
+      deck.count mustEqual 2
       deck.next() mustEqual Move1_High
+      deck.count mustEqual 1
       deck.next() mustEqual Move2_High
+      deck.count mustEqual 0
     }
   }
 }
