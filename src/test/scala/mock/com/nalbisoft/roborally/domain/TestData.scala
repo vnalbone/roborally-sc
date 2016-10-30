@@ -1,9 +1,14 @@
+/*
+ * Copyright (c) Vincent Nalbone 2016
+ */
+
 package mock.com.nalbisoft.roborally.domain
 
 import com.nalbisoft.roborally.domain.RegisterNumbers._
 import com.nalbisoft.roborally.domain._
 import com.nalbisoft.roborally.domain.core.card._
 import com.nalbisoft.roborally.domain.game.{PlayerId, PlayerImpl, ProgramCardSet}
+import mock.com.nalbisoft.roborally.domain.game.PlayerSpy
 
 object TestData {
   val SomePos = Position(5, 5)
@@ -17,9 +22,9 @@ object TestData {
   val SomeOtherRobot = new Robot("Trundle Bot", new RegisterSet())
   val SomeMCard = ProgramCard(100, Move1)
   val SomeLoc = SouthLoc
-  val SomePlayer = PlayerImpl(PlayerId("1"), "Bob")
-  val SomeOtherPlayer = PlayerImpl(PlayerId("2"), "John")
-  val YetAnotherPlayer = PlayerImpl(PlayerId("3"), "Jim")
+  val SomePlayer = PlayerSpy(PlayerId("1"), "Bob")
+  val SomeOtherPlayer = PlayerSpy(PlayerId("2"), "John")
+  val YetAnotherPlayer = PlayerSpy(PlayerId("3"), "Jim")
   val SomeFloor = new BasicFactoryFloor(8)
 
   val Move1_Low = ProgramCard(100, Move1)

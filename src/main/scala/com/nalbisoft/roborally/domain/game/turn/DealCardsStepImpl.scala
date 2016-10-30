@@ -10,7 +10,8 @@ import com.nalbisoft.roborally.domain.game.Player
 import scala.util.Try
 
 case object DealCardsStepImpl extends DealCardsStep {
-  def dealCards(player: Player, deck: CardDeck): Try[Hand] = {
-    deck.deal(1, 9) map (h => h(0))
+  def dealCards(player: Player, deck: CardDeck): Try[Unit] = {
+    val hand = deck.deal(1, 9) map (h => h(0))
+    hand map { h => player.acceptProgramCards(h.cards) }
   }
 }

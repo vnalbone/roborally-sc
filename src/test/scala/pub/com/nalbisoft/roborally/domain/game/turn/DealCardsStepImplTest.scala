@@ -15,9 +15,9 @@ class DealCardsStepImplTest extends BaseSpecs2Test {
 
   "Dealing cards" should {
     "return top 9 cards from deck when robot is undamaged" in new DrawCardsStepScope {
-      val dealtCards = step.dealCards(player, deck).extractSuccess
+      step.dealCards(player, deck) must beSuccessfulTry
 
-      dealtCards.cards mustEqual cards.take(9)
+      player.passedProgramCards must beSome(cards.take(9))
     }
   }
 }

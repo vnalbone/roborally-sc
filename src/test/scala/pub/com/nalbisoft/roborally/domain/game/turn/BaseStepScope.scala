@@ -1,12 +1,17 @@
+/*
+ * Copyright (c) Vincent Nalbone 2016
+ */
+
 package pub.com.nalbisoft.roborally.domain.game.turn
 
 import com.nalbisoft.roborally.domain.core.card.BasicCardDeck
 import com.nalbisoft.roborally.domain.game.ProgramCardSet
 import mock.com.nalbisoft.roborally.domain.TestData._
+import mock.com.nalbisoft.roborally.domain.game.PlayerSpy
 import org.specs2.specification.Scope
 
 class BaseStepScope extends Scope {
-  val player = SomePlayer
+  val player: PlayerSpy = SomePlayer
   val cards = Seq(
     Move1_Low,
     Move2_Low,

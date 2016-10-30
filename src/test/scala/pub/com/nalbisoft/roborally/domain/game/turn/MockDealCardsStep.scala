@@ -31,7 +31,9 @@ class StubTurnStepFactory private(val dcs: DealCardsStep, val prs: ProgramRegist
 }
 
 class MockDealCardsStep(res: Try[Seq[ProgramCard]]) extends DealCardsStep {
-  override def dealCards(player: Player, deck: CardDeck): Try[Hand] = res.map(new Hand(_))
+  override def dealCards(player: Player, deck: CardDeck): Try[Unit] = {
+    res map player.acceptProgramCards
+  }
 }
 
 class MockProgramRegistersStep(res: Try[RegisterSet]) extends ProgramRegisterStep {

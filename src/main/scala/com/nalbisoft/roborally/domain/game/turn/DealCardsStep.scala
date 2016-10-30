@@ -10,5 +10,5 @@ import com.nalbisoft.roborally.domain.game.Player
 import scala.util.Try
 
 trait DealCardsStep {
-  def dealCards(player: Player, deck: CardDeck): Try[Hand]
+  def dealCards(player: Player, deck: CardDeck): Try[Unit]
 }

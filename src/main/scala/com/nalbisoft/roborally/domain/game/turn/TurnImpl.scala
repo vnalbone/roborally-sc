@@ -48,7 +48,7 @@ class TurnImpl(players: Seq[Player], floor: FactoryFloor, stepFactory: TurnStepF
     turnStarted = true
   }
 
-  def dealCards(player: Player, deck: CardDeck): Try[Hand] = {
+  def dealCards(player: Player, deck: CardDeck): Try[Unit] = {
     def assertDealCardsOk(player: Player): Try[Unit] = {
       import com.nalbisoft.util.enrichers.EnrichedBoolean
 
@@ -61,10 +61,9 @@ class TurnImpl(players: Seq[Player], floor: FactoryFloor, stepFactory: TurnStepF
 
     for (
       _ <- assertDealCardsOk(player);
-      dealtCards <- dealCardsStep.dealCards(player, deck)
+      _ <- dealCardsStep.dealCards(player, deck)
     ) yield {
       setup.completeDealCards(player)
-      dealtCards
     }
   }
 

@@ -213,9 +213,9 @@ class TurnImplTest extends BaseSpecs2Test {
 
     "return top 5 cards from deck when robot is undamaged" in new TurnScope {
       turn.start()
-      val dealtCards = turn.dealCards(player, deck).extractSuccess
+      turn.dealCards(player, deck) must beSuccessfulTry
 
-      dealtCards.cards mustEqual cards
+      player.passedProgramCards must beSome(cards)
       turn.isDealCardsStepCompleted(player) must beTrue
     }
   }
