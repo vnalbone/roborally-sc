@@ -1,6 +1,10 @@
+/*
+ * Copyright (c) Vincent Nalbone 2016
+ */
+
 package com.nalbisoft.roborally.domain.game.turn
 
-import com.nalbisoft.roborally.domain.core.card.{CardDeck, ProgramCard}
+import com.nalbisoft.roborally.domain.core.card.{CardDeck, Hand}
 import com.nalbisoft.roborally.domain.game.{GameException, Player, ProgramCardSet}
 import com.nalbisoft.roborally.domain.{FactoryFloor, RegisterNumbers, RegisterSet}
 
@@ -44,7 +48,7 @@ class TurnImpl(players: Seq[Player], floor: FactoryFloor, stepFactory: TurnStepF
     turnStarted = true
   }
 
-  def dealCards(player: Player, deck: CardDeck): Try[Seq[ProgramCard]] = {
+  def dealCards(player: Player, deck: CardDeck): Try[Hand] = {
     def assertDealCardsOk(player: Player): Try[Unit] = {
       import com.nalbisoft.util.enrichers.EnrichedBoolean
 

@@ -1,9 +1,13 @@
+/*
+ * Copyright (c) Vincent Nalbone 2016
+ */
+
 package pub.com.nalbisoft.roborally.domain.game.turn
 
 import com.nalbisoft.roborally.domain.game.turn.DealCardsStepImpl
-import org.specs2.mutable.Specification
+import mock.com.nalbisoft.test.BaseSpecs2Test
 
-class DealCardsStepImplTest extends Specification {
+class DealCardsStepImplTest extends BaseSpecs2Test {
 
   class DrawCardsStepScope extends BaseStepScope {
     val step = DealCardsStepImpl
@@ -11,8 +15,9 @@ class DealCardsStepImplTest extends Specification {
 
   "Dealing cards" should {
     "return top 9 cards from deck when robot is undamaged" in new DrawCardsStepScope {
-      val dealtCards = step.dealCards(player, deck)
-      dealtCards must beSuccessfulTry(cards.take(9))
+      val dealtCards = step.dealCards(player, deck).extractSuccess
+
+      dealtCards.cards mustEqual cards.take(9)
     }
   }
 }

@@ -1,8 +1,12 @@
+/*
+ * Copyright (c) Vincent Nalbone 2016
+ */
+
 package pub.com.nalbisoft.roborally.domain.game.turn
 
 import com.nalbisoft.roborally.domain.RegisterNumbers._
 import com.nalbisoft.roborally.domain.RegisterSet
-import com.nalbisoft.roborally.domain.core.card.{CardDeck, BasicCardDeck}
+import com.nalbisoft.roborally.domain.core.card.{BasicCardDeck, CardDeck, Hand}
 import com.nalbisoft.roborally.domain.game._
 import com.nalbisoft.roborally.domain.game.turn._
 import mock.com.nalbisoft.roborally.domain.TestData._
@@ -14,6 +18,7 @@ class TurnImplTest extends BaseSpecs2Test {
   class TurnScope extends Scope {
 
     val cards = Seq(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low)
+    val hand = new Hand(Seq(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low))
     val cardSet = ProgramCardSet(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low)
     val deck = new BasicCardDeck(cards)
 
@@ -208,9 +213,9 @@ class TurnImplTest extends BaseSpecs2Test {
 
     "return top 5 cards from deck when robot is undamaged" in new TurnScope {
       turn.start()
-      val dealtCards = turn.dealCards(player, deck)
+      val dealtCards = turn.dealCards(player, deck).extractSuccess
 
-      dealtCards must beSuccessfulTry(cards)
+      dealtCards.cards mustEqual cards
       turn.isDealCardsStepCompleted(player) must beTrue
     }
   }

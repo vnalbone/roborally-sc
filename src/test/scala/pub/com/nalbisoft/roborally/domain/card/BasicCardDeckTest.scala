@@ -69,56 +69,62 @@ class BasicCardDeckTest extends BaseSpecs2Test {
     }
   }
 
-  "Calling next without shuffling cards" should {
+  "Drawing a card without shuffling" should {
     "fail with a DeckEmptyException if there are no more cards" in new EmptyDeckScope {
 
-      deck.draw() must throwA[DeckEmptyException]
+      deck.draw().assertFail[DeckEmptyException]
     }
 
     "return cards in their original order" in new CardScope {
       deck.count mustEqual 4
-      deck.draw() mustEqual Move1_Low
+      deck.draw().extractSuccess mustEqual Move1_Low
       deck.count mustEqual 3
-      deck.draw() mustEqual Move2_Low
+      deck.draw().extractSuccess mustEqual Move2_Low
       deck.count mustEqual 2
-      deck.draw() mustEqual Move1_High
+      deck.draw().extractSuccess mustEqual Move1_High
       deck.count mustEqual 1
-      deck.draw() mustEqual Move2_High
+      deck.draw().extractSuccess mustEqual Move2_High
       deck.count mustEqual 0
     }
   }
 
-  "Calling hasNext" should {
+  "Calling hasMore" should {
     "return false for an empty deck" in new EmptyDeckScope {
-      deck.hasNext must beFalse
+      deck.hasMore must beFalse
     }
 
     "return true when there are still cards remaining and false after all are drawn" in new CardScope {
-      deck.hasNext must beTrue
+      deck.hasMore must beTrue
       deck.draw()
-      deck.hasNext must beTrue
+      deck.hasMore must beTrue
       deck.draw()
-      deck.hasNext must beTrue
+      deck.hasMore must beTrue
       deck.draw()
-      deck.hasNext must beTrue
+      deck.hasMore must beTrue
       deck.draw()
-      deck.hasNext must beFalse
+      deck.hasMore must beFalse
     }
   }
 
   "Dealing a number of cards for a number of people" should {
-    "fail with a DeckEmptyException if there are no more cards" in {
+    "fail with a DeckEmptyException for an empty deck" in {
       val deck = new BasicCardDeck(Nil)
-      deck.deal(1, 5) must throwA[DeckEmptyException]
+      deck.deal(1, 5).assertFail[DeckEmptyException]
+    }
+
+    "fail with a DeckEmptyException if there aren't enough cards for everyone." in {
+      val deck = new BasicCardDeck(Nil)
+      deck.deal(1, 5).assertFail[DeckEmptyException]
+      deck.hasMore must beFalse
     }
 
     "return no hands when number of people is 0" in new CardScope {
-      val result = deck.deal(0, 0)
+      val result = deck.deal(0, 0).extractSuccess
       result must haveSize(0)
     }
 
     "return 1 hand containing 1 card" in new CardScope {
-      val hands = deck.deal(1, 1)
+      val hands = deck.deal(1, 1).extractSuccess
       hands must haveSize(1)
 
       val hand = hands(0)
@@ -127,7 +133,7 @@ class BasicCardDeckTest extends BaseSpecs2Test {
     }
 
     "return 1 hand containing 2 cards when dealing 2 cards to 1 person" in new CardScope {
-      val hands = deck.deal(1, 2)
+      val hands = deck.deal(1, 2).extractSuccess
       hands must haveSize(1)
 
       val hand = hands(0)
@@ -136,8 +142,8 @@ class BasicCardDeckTest extends BaseSpecs2Test {
       hand.cards(1) mustEqual secondCard
     }
 
-    "return 2 hands containing 2 cards when dealing 2 cards to 2 people" in new CardScope {
-      val hands = deck.deal(2, 2)
+    "return 2 hands containing 2 cards when dealing 2 cards to 2 people, emptying the deck" in new CardScope {
+      val hands = deck.deal(2, 2).extractSuccess
       hands must haveSize(2)
 
       val hand1 = hands(0)
@@ -149,6 +155,8 @@ class BasicCardDeckTest extends BaseSpecs2Test {
       hand2.cards must haveSize(2)
       hand2.cards(0) mustEqual secondCard
       hand2.cards(1) mustEqual fourthCard
+
+      deck.hasMore must beFalse
     }
   }
 }
