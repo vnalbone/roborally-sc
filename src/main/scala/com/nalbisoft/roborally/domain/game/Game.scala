@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Vincent Nalbone 2016
+ */
+
 package com.nalbisoft.roborally.domain.game
 
 import com.nalbisoft.roborally.domain.FactoryFloor
@@ -51,7 +55,7 @@ class Game(floor: FactoryFloor, stepFactory: TurnFactory) {
 
   def startNewTurn(): Try[Unit] = {
     if (!gameStarted) {
-      throw GameNotStartedException()
+      return Failure(GameNotStartedException())
     }
 
     val turn = stepFactory.createTurn(players, floor)

@@ -184,18 +184,18 @@ class TurnImplTest extends BaseSpecs2Test {
   "Dealing cards step" should {
 
     "fail if turn is not active" in new TurnScope {
-      turn.dealCards(player, deck).rethrow must throwAn[TurnNotStartedException]
+      turn.dealCards(player, deck).assertFail[TurnNotStartedException]
     }
 
     "fail if player is not part of the game" in new TurnScope {
       turn.start()
-      turn.dealCards(SomeOtherPlayer, deck).rethrow must throwAn[InvalidPlayerException]
+      turn.dealCards(SomeOtherPlayer, deck).assertFail[InvalidPlayerException]
     }
 
     "fail if cards were already dealt" in new TurnScope {
       turn.start()
       turn.dealCards(player, deck)
-      turn.dealCards(player, deck).rethrow must throwA[CardsAlreadyDealtException]
+      turn.dealCards(player, deck).assertFail[CardsAlreadyDealtException]
     }
 
     "remain incomplete if there is an error executing the step" in new TurnScope {
@@ -222,20 +222,20 @@ class TurnImplTest extends BaseSpecs2Test {
 
   "Programming registers" should {
     "fail if turn is not active" in new TurnScope {
-      turn.programRegisters(player, cardSet).rethrow must throwAn[TurnNotStartedException]
+      turn.programRegisters(player, cardSet).assertFail[TurnNotStartedException]
     }
 
     "fail if player is not part of the game" in new TurnScope {
       turn.start()
       turn.dealCards(player, deck)
 
-      turn.programRegisters(SomeOtherPlayer, cardSet).rethrow must throwAn[InvalidPlayerException]
+      turn.programRegisters(SomeOtherPlayer, cardSet).assertFail[InvalidPlayerException]
     }
 
     "fail if registers are programmed but cards were not dealt" in new TurnScope {
       turn.start()
 
-      turn.programRegisters(player, cardSet).rethrow must throwAn[CardsNotDealtException]
+      turn.programRegisters(player, cardSet).assertFail[CardsNotDealtException]
     }
 
     "fail if registers were already programmed" in new TurnScope {
@@ -243,7 +243,7 @@ class TurnImplTest extends BaseSpecs2Test {
       turn.dealCards(player, deck)
 
       turn.programRegisters(player, cardSet)
-      turn.programRegisters(player, cardSet).rethrow must throwAn[RegistersAlreadyProgrammedException]
+      turn.programRegisters(player, cardSet).assertFail[RegistersAlreadyProgrammedException]
     }
 
     "remain incomplete if there is an error executing the step" in new TurnScope {

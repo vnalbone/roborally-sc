@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Vincent Nalbone 2016
+ */
+
 package pub.com.nalbisoft.roborally.domain.game
 
 import com.nalbisoft.roborally.domain.game.turn.{TurnFactory, TurnFactoryImpl}
@@ -24,7 +28,7 @@ class GameTest extends BaseSpecs2Test {
     "fail when game is already started" in new ValidGameScope {
       game.start
 
-      game.addPlayer(YetAnotherPlayer).rethrow must throwA[GameAlreadyStartedException]
+      game.addPlayer(YetAnotherPlayer).assertFail[GameAlreadyStartedException]
     }
 
     "fail when there are already 8 players" in new NewGameScope {
@@ -37,13 +41,13 @@ class GameTest extends BaseSpecs2Test {
       game.addPlayer(newPlayer(7))
       game.addPlayer(newPlayer(8))
 
-      game.addPlayer(newPlayer(9)).rethrow must throwAn[TooManyPlayersException]
+      game.addPlayer(newPlayer(9)).assertFail[TooManyPlayersException]
     }
 
     "fail if the same player is added twice" in new NewGameScope {
       game.addPlayer(SomePlayer)
 
-      game.addPlayer(SomePlayer).rethrow must throwA[DuplicatePlayerException]
+      game.addPlayer(SomePlayer).assertFail[DuplicatePlayerException]
     }
 
     "add new players when game is not yet started" in new NewGameScope {
@@ -72,15 +76,15 @@ class GameTest extends BaseSpecs2Test {
   "Starting a game" should {
     "fail if the game is already started" in new ValidGameScope {
       game.start must beSuccessfulTry
-      game.start.rethrow must throwA[GameAlreadyStartedException]
+      game.start.assertFail[GameAlreadyStartedException]
     }
 
     "fail when there is not at least 2 players" in new NewGameScope {
       game.start
-      game.start.rethrow must throwA[NotEnoughPlayersException]
+      game.start.assertFail[NotEnoughPlayersException]
 
       game.addPlayer(SomePlayer)
-      game.start.rethrow must throwA[NotEnoughPlayersException]
+      game.start.assertFail[NotEnoughPlayersException]
     }
 
     "complete successfully and have gameStarted == true" in new ValidGameScope {
@@ -91,7 +95,7 @@ class GameTest extends BaseSpecs2Test {
 
   "Starting a new turn" should {
     "fail if the game isn't started yet" in new ValidGameScope {
-      game.startNewTurn().rethrow must throwA[GameNotStartedException]
+      game.startNewTurn().assertFail[GameNotStartedException]
     }
 
     "call start on new turn if it succeeds" in {
