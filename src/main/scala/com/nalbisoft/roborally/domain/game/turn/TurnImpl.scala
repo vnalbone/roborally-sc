@@ -79,7 +79,7 @@ class TurnImpl(players: Seq[Player], floor: FactoryFloor, stepFactory: TurnStepF
     setup.alreadyDealtCards(player)
   }
 
-  def programRegisters(player: Player, cards: ProgramCardSet): Try[RegisterSet] = {
+  def programRegisters(player: Player, cards: ProgramCardSet): Try[Unit] = {
     def assertProgramRegisterOk(player: Player): Try[Unit] = {
       def foo(player: Player): Try[Unit] = {
         if (!setup.allCardsDealt) {
@@ -102,10 +102,10 @@ class TurnImpl(players: Seq[Player], floor: FactoryFloor, stepFactory: TurnStepF
 
     for (
       _ <- assertProgramRegisterOk(player);
-      regSet <- programRegistersStep.programRegisters(player, cards)
+      _ <- programRegistersStep.programRegisters(player, cards)
     ) yield {
       setup.completeProgramRegisters(player)
-      regSet
+      Success(())
     }
   }
 

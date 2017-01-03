@@ -36,6 +36,6 @@ class MockDealCardsStep(res: Try[Map[Player, Seq[ProgramCard]]]) extends DealCar
   }
 }
 
-class MockProgramRegistersStep(res: Try[RegisterSet]) extends ProgramRegisterStep {
-  override def programRegisters(player: Player, cards: ProgramCardSet): Try[RegisterSet] = res
+class MockProgramRegistersStep(res: Try[Unit]) extends ProgramRegisterStep {
+  override def programRegisters(player: Player, cards: ProgramCardSet): Try[Unit] = res
 }

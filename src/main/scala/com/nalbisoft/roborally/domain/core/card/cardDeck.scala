@@ -41,7 +41,6 @@ class BasicCardDeck(cards: Seq[ProgramCard]) extends CardDeck {
     iter.hasNext
   }
 
-
   override def deal[T](toDealTo: Seq[T], numCards: Int): Try[Map[T, Hand]] = {
 
     val hands = toDealTo.foldLeft(Map[T, Hand]())((a, b) => a + (b -> new Hand()))

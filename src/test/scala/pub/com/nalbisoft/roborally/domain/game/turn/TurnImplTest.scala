@@ -37,7 +37,7 @@ class TurnImplTest extends BaseSpecs2Test {
     //    SomeFloor.addRobot(player.robot, SomeLoc)
 
     val drawStep = new MockDealCardsStep(Success(Map(player -> cards)))
-    val progRegStep = new MockProgramRegistersStep(Success(regSet))
+    val progRegStep = ProgramRegisterStepImpl
     val stepFactory = new StubTurnStepFactory().withNewDealCardsStep(drawStep).withNewProgramRegistersStep(progRegStep)
     val turn = new TurnImpl(players, SomeFloor, stepFactory)
   }
@@ -273,7 +273,7 @@ class TurnImplTest extends BaseSpecs2Test {
       val regResultTry = turn.programRegisters(player, cardSet)
 
       regResultTry must beSuccessfulTry
-      regResultTry.get mustEqual regSet
+      player.passedRegister must beSome(regSet)
     }
   }
 

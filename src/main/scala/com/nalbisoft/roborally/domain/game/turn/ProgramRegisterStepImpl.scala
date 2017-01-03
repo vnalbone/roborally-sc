@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Vincent Nalbone 2017
+ */
+
 package com.nalbisoft.roborally.domain.game.turn
 
 import com.nalbisoft.roborally.domain.RegisterNumbers._
@@ -7,7 +11,7 @@ import com.nalbisoft.roborally.domain.game.{Player, ProgramCardSet}
 import scala.util.{Success, Try}
 
 case object ProgramRegisterStepImpl extends ProgramRegisterStep {
-  override def programRegisters(player: Player, cards: ProgramCardSet): Try[RegisterSet] = {
+  override def programRegisters(player: Player, cards: ProgramCardSet): Try[Unit] = {
     val regSet = new RegisterSet
 
     //TODO check for locked registers
@@ -17,6 +21,8 @@ case object ProgramRegisterStepImpl extends ProgramRegisterStep {
     regSet.programRegister(Four, cards.card4)
     regSet.programRegister(Five, cards.card5)
 
-    Success(regSet)
+    player.acceptProgrammedRegister(regSet)
+
+    Success(())
   }
 }

@@ -20,7 +20,7 @@ class ProgramRegisterStepImplTest extends BaseSpecs2Test {
       val regResultTry = step.programRegisters(player1, cardSet)
 
       regResultTry must beSuccessfulTry
-      regResultTry.get mustEqual SomeRegSet
+      player1.passedRegister must beSome(SomeRegSet)
     }
   }
 }
