@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Vincent Nalbone 2016
+ * Copyright (c) Vincent Nalbone 2017
  */
 
 package pub.com.nalbisoft.roborally.domain.game.turn
@@ -10,6 +10,7 @@ import com.nalbisoft.roborally.domain.core.card.{BasicCardDeck, CardDeck, Hand}
 import com.nalbisoft.roborally.domain.game._
 import com.nalbisoft.roborally.domain.game.turn._
 import mock.com.nalbisoft.roborally.domain.TestData._
+import mock.com.nalbisoft.roborally.domain.game.PlayerSpy
 import mock.com.nalbisoft.test.{BaseSpecs2Test, GenericTestException}
 
 import scala.util.{Failure, Success}
@@ -18,7 +19,7 @@ class TurnImplTest extends BaseSpecs2Test {
   class TurnScope extends Scope {
 
     val cards = Seq(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low)
-    val hand = new Hand(Seq(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low))
+    val hand = new Hand(cards)
     val cardSet = ProgramCardSet(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateRight_Low)
     val deck = new BasicCardDeck(cards)
 
@@ -29,13 +30,16 @@ class TurnImplTest extends BaseSpecs2Test {
       .programRegister(Four, UTurn_Low)
       .programRegister(Five, RotateRight_Low)
 
-    val player = SomePlayer
+    val player = PlayerSpy(PlayerId("1"), "Bob")
+    val nonplayer = PlayerSpy(PlayerId("2"), "John")
+
+    val players = Seq(player)
     //    SomeFloor.addRobot(player.robot, SomeLoc)
 
-    val drawStep = new MockDealCardsStep(Success(cards))
+    val drawStep = new MockDealCardsStep(Success(Map(player -> cards)))
     val progRegStep = new MockProgramRegistersStep(Success(regSet))
     val stepFactory = new StubTurnStepFactory().withNewDealCardsStep(drawStep).withNewProgramRegistersStep(progRegStep)
-    val turn = new TurnImpl(Seq(player), SomeFloor, stepFactory)
+    val turn = new TurnImpl(players, SomeFloor, stepFactory)
   }
 
   //  "The order of the steps" should {
@@ -184,39 +188,39 @@ class TurnImplTest extends BaseSpecs2Test {
   "Dealing cards step" should {
 
     "fail if turn is not active" in new TurnScope {
-      turn.dealCards(player, deck).assertFail[TurnNotStartedException]
+      turn.dealCards(players, deck).assertFail[TurnNotStartedException]
     }
 
     "fail if player is not part of the game" in new TurnScope {
       turn.start()
-      turn.dealCards(SomeOtherPlayer, deck).assertFail[InvalidPlayerException]
+      turn.dealCards(Seq(nonplayer), deck).assertFail[InvalidPlayerException]
     }
 
     "fail if cards were already dealt" in new TurnScope {
       turn.start()
-      turn.dealCards(player, deck)
-      turn.dealCards(player, deck).assertFail[CardsAlreadyDealtException]
+      turn.dealCards(players, deck)
+      turn.dealCards(players, deck).assertFail[CardsAlreadyDealtException]
     }
 
     "remain incomplete if there is an error executing the step" in new TurnScope {
       val failedStep = new MockDealCardsStep(Failure(GenericTestException))
       val failedFactory = new StubTurnStepFactory().withNewDealCardsStep(failedStep)
 
-      val failedTurn = new TurnImpl(Seq(player), SomeFloor, failedFactory)
+      val failedTurn = new TurnImpl(players, SomeFloor, failedFactory)
 
       failedTurn.start()
-      val dealtCards = failedTurn.dealCards(player, deck)
+      val dealtCards = failedTurn.dealCards(players, deck)
 
       dealtCards must beFailedTry(GenericTestException)
-      failedTurn.isDealCardsStepCompleted(player) must beFalse
+      failedTurn.isDealCardsStepCompleted(players(0)) must beFalse
     }
 
     "return top 5 cards from deck when robot is undamaged" in new TurnScope {
       turn.start()
-      turn.dealCards(player, deck) must beSuccessfulTry
+      turn.dealCards(players, deck) must beSuccessfulTry
 
       player.passedProgramCards must beSome(cards)
-      turn.isDealCardsStepCompleted(player) must beTrue
+      turn.isDealCardsStepCompleted(players(0)) must beTrue
     }
   }
 
@@ -227,9 +231,9 @@ class TurnImplTest extends BaseSpecs2Test {
 
     "fail if player is not part of the game" in new TurnScope {
       turn.start()
-      turn.dealCards(player, deck)
+      turn.dealCards(players, deck)
 
-      turn.programRegisters(SomeOtherPlayer, cardSet).assertFail[InvalidPlayerException]
+      turn.programRegisters(nonplayer, cardSet).assertFail[InvalidPlayerException]
     }
 
     "fail if registers are programmed but cards were not dealt" in new TurnScope {
@@ -240,7 +244,7 @@ class TurnImplTest extends BaseSpecs2Test {
 
     "fail if registers were already programmed" in new TurnScope {
       turn.start()
-      turn.dealCards(player, deck)
+      turn.dealCards(players, deck)
 
       turn.programRegisters(player, cardSet)
       turn.programRegisters(player, cardSet).assertFail[RegistersAlreadyProgrammedException]
@@ -249,13 +253,13 @@ class TurnImplTest extends BaseSpecs2Test {
     "remain incomplete if there is an error executing the step" in new TurnScope {
       val failedStep = new MockProgramRegistersStep(Failure(GenericTestException))
       val failedFactory = new StubTurnStepFactory()
-        .withNewDealCardsStep(new MockDealCardsStep(Success(Nil)))
+        .withNewDealCardsStep(new MockDealCardsStep(Success(Map(player -> Nil))))
         .withNewProgramRegistersStep(failedStep)
 
       val failedTurn = new TurnImpl(Seq(player), SomeFloor, failedFactory)
 
       failedTurn.start()
-      val dealtCards = failedTurn.dealCards(player, deck)
+      val dealtCards = failedTurn.dealCards(players, deck)
 
       failedTurn.programRegisters(player, cardSet) must beFailedTry(GenericTestException)
 
@@ -264,7 +268,7 @@ class TurnImplTest extends BaseSpecs2Test {
 
     "have registers programmed in proper order when all goes well and no locked registers" in new TurnScope {
       turn.start()
-      turn.dealCards(player, deck)
+      turn.dealCards(players, deck)
 
       val regResultTry = turn.programRegisters(player, cardSet)
 
@@ -275,14 +279,14 @@ class TurnImplTest extends BaseSpecs2Test {
 
   private def completeTurnSetup(player: Player, turn: TurnImpl, deck: CardDeck) = {
     turn.start()
-    turn.dealCards(player, deck)
+    turn.dealCards(Seq(player), deck)
     turn.programRegisters(player, SomeProgramCardSet)
     //    turn.announcePowerDown(player, true)
   }
 
   private def endTurn(player: Player, turn: TurnImpl, deck: CardDeck) = {
     turn.start()
-    turn.dealCards(player, deck)
+    turn.dealCards(Seq(player), deck)
     turn.programRegisters(player, SomeProgramCardSet)
     //    turn.announcePowerDown(player, true)
 

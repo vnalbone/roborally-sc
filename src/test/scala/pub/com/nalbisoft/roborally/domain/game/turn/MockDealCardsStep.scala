@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Vincent Nalbone 2016
+ * Copyright (c) Vincent Nalbone 2017
  */
 
 package pub.com.nalbisoft.roborally.domain.game.turn
@@ -30,9 +30,9 @@ class StubTurnStepFactory private(val dcs: DealCardsStep, val prs: ProgramRegist
   override def createProgramRegistersStep: ProgramRegisterStep = prs
 }
 
-class MockDealCardsStep(res: Try[Seq[ProgramCard]]) extends DealCardsStep {
-  override def dealCards(player: Player, deck: CardDeck): Try[Unit] = {
-    res map player.acceptProgramCards
+class MockDealCardsStep(res: Try[Map[Player, Seq[ProgramCard]]]) extends DealCardsStep {
+  override def dealCards(players: Seq[Player], deck: CardDeck): Try[Unit] = {
+    res map { r => r foreach { case (player, cards) => player.acceptProgramCards(cards) } }
   }
 }
 

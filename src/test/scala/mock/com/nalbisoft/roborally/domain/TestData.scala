@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Vincent Nalbone 2016
+ * Copyright (c) Vincent Nalbone 2017
  */
 
 package mock.com.nalbisoft.roborally.domain
@@ -7,7 +7,7 @@ package mock.com.nalbisoft.roborally.domain
 import com.nalbisoft.roborally.domain.RegisterNumbers._
 import com.nalbisoft.roborally.domain._
 import com.nalbisoft.roborally.domain.core.card._
-import com.nalbisoft.roborally.domain.game.{PlayerId, PlayerImpl, ProgramCardSet}
+import com.nalbisoft.roborally.domain.game.{PlayerId, ProgramCardSet}
 import mock.com.nalbisoft.roborally.domain.game.PlayerSpy
 
 object TestData {
@@ -22,9 +22,12 @@ object TestData {
   val SomeOtherRobot = new Robot("Trundle Bot", new RegisterSet())
   val SomeMCard = ProgramCard(100, Move1)
   val SomeLoc = SouthLoc
-  val SomePlayer = PlayerSpy(PlayerId("1"), "Bob")
-  val SomeOtherPlayer = PlayerSpy(PlayerId("2"), "John")
-  val YetAnotherPlayer = PlayerSpy(PlayerId("3"), "Jim")
+
+  def SomePlayer = PlayerSpy(PlayerId("1"), "Bob")
+
+  def SomeOtherPlayer = PlayerSpy(PlayerId("2"), "John")
+
+  def YetAnotherPlayer = PlayerSpy(PlayerId("3"), "Jim")
   val SomeFloor = new BasicFactoryFloor(8)
 
   val Move1_Low = ProgramCard(100, Move1)
@@ -34,12 +37,26 @@ object TestData {
   val RotateRight_Low = ProgramCard(100, RotateRight)
   val RotateLeft_Low = ProgramCard(100, RotateLeft)
 
-  val Move1_High = ProgramCard(200, Move1)
-  val Move2_High = ProgramCard(200, Move2)
-  val Move3_High = ProgramCard(200, Move3)
-  val UTurn_High = ProgramCard(200, UTurn)
-  val RotateRight_High = ProgramCard(200, RotateRight)
-  val RotateLeft_High = ProgramCard(200, RotateLeft)
+  val Move1_Med = ProgramCard(200, Move1)
+  val Move2_Med = ProgramCard(200, Move2)
+  val Move3_Med = ProgramCard(200, Move3)
+  val UTurn_Med = ProgramCard(200, UTurn)
+  val RotateRight_Med = ProgramCard(200, RotateRight)
+  val RotateLeft_Med = ProgramCard(200, RotateLeft)
+
+  val Move1_High = ProgramCard(300, Move1)
+  val Move2_High = ProgramCard(300, Move2)
+  val Move3_High = ProgramCard(300, Move3)
+  val UTurn_High = ProgramCard(300, UTurn)
+  val RotateRight_High = ProgramCard(300, RotateRight)
+  val RotateLeft_High = ProgramCard(300, RotateLeft)
+
+  val Move1_Highest = ProgramCard(400, Move1)
+  val Move2_Highest = ProgramCard(400, Move2)
+  val Move3_Highest = ProgramCard(400, Move3)
+  val UTurn_Highest = ProgramCard(400, UTurn)
+  val RotateRight_Highest = ProgramCard(400, RotateRight)
+  val RotateLeft_Highest = ProgramCard(400, RotateLeft)
 
   val SomeProgramCardSet = ProgramCardSet(Move1_Low, Move2_Low, Move3_Low, UTurn_Low, RotateLeft_Low)
   val SomeRegSet = new RegisterSet()

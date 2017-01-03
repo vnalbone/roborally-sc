@@ -1,10 +1,11 @@
 /*
- * Copyright (c) Vincent Nalbone 2016
+ * Copyright (c) Vincent Nalbone 2017
  */
 
 package pub.com.nalbisoft.roborally.domain.card
 
 import com.nalbisoft.roborally.domain.core.card.{BasicCardDeck, DeckEmptyException, Move1}
+import com.nalbisoft.roborally.domain.game.{PlayerId, PlayerImpl}
 import mock.com.nalbisoft.roborally.domain.TestData._
 import mock.com.nalbisoft.test.BaseSpecs2Test
 
@@ -17,12 +18,15 @@ class BasicCardDeckTest extends BaseSpecs2Test {
   class CardScope extends Scope {
     val firstCard = Move1_Low
     val secondCard = Move2_Low
-    val thirdCard = Move1_High
-    val fourthCard = Move2_High
+    val thirdCard = Move1_Med
+    val fourthCard = Move2_Med
 
     val cards = Seq(firstCard, secondCard, thirdCard, fourthCard)
 
     val deck = new BasicCardDeck(cards)
+
+    val player1 = PlayerImpl(PlayerId("1"), "Bob")
+    val player2 = PlayerImpl(PlayerId("2"), "John")
   }
 
   "Calling count" should {
@@ -81,9 +85,9 @@ class BasicCardDeckTest extends BaseSpecs2Test {
       deck.count mustEqual 3
       deck.draw().extractSuccess mustEqual Move2_Low
       deck.count mustEqual 2
-      deck.draw().extractSuccess mustEqual Move1_High
+      deck.draw().extractSuccess mustEqual Move1_Med
       deck.count mustEqual 1
-      deck.draw().extractSuccess mustEqual Move2_High
+      deck.draw().extractSuccess mustEqual Move2_Med
       deck.count mustEqual 0
     }
   }
@@ -109,49 +113,49 @@ class BasicCardDeckTest extends BaseSpecs2Test {
   "Dealing a number of cards for a number of people" should {
     "fail with a DeckEmptyException for an empty deck" in {
       val deck = new BasicCardDeck(Nil)
-      deck.deal(1, 5).assertFail[DeckEmptyException]
+      deck.deal(Seq(SomePlayer), 5).assertFail[DeckEmptyException]
     }
 
     "fail with a DeckEmptyException if there aren't enough cards for everyone." in {
       val deck = new BasicCardDeck(Nil)
-      deck.deal(1, 5).assertFail[DeckEmptyException]
+      deck.deal(Seq(SomePlayer), 5).assertFail[DeckEmptyException]
       deck.hasMore must beFalse
     }
 
     "return no hands when number of people is 0" in new CardScope {
-      val result = deck.deal(0, 0).extractSuccess
+      val result = deck.deal(Seq(), 0).extractSuccess
       result must haveSize(0)
     }
 
     "return 1 hand containing 1 card" in new CardScope {
-      val hands = deck.deal(1, 1).extractSuccess
+      val hands = deck.deal(Seq(SomePlayer), 1).extractSuccess
       hands must haveSize(1)
 
-      val hand = hands(0)
+      val hand = hands(SomePlayer)
       hand.cards must haveSize(1)
       hand.cards(0) mustEqual firstCard
     }
 
     "return 1 hand containing 2 cards when dealing 2 cards to 1 person" in new CardScope {
-      val hands = deck.deal(1, 2).extractSuccess
+      val hands = deck.deal(Seq(SomePlayer), 2).extractSuccess
       hands must haveSize(1)
 
-      val hand = hands(0)
+      val hand = hands(SomePlayer)
       hand.cards must haveSize(2)
       hand.cards(0) mustEqual firstCard
       hand.cards(1) mustEqual secondCard
     }
 
     "return 2 hands containing 2 cards when dealing 2 cards to 2 people, emptying the deck" in new CardScope {
-      val hands = deck.deal(2, 2).extractSuccess
+      val hands = deck.deal(Seq(SomePlayer, SomeOtherPlayer), 2).extractSuccess
       hands must haveSize(2)
 
-      val hand1 = hands(0)
+      val hand1 = hands(SomePlayer)
       hand1.cards must haveSize(2)
       hand1.cards(0) mustEqual firstCard
       hand1.cards(1) mustEqual thirdCard
 
-      val hand2 = hands(1)
+      val hand2 = hands(SomeOtherPlayer)
       hand2.cards must haveSize(2)
       hand2.cards(0) mustEqual secondCard
       hand2.cards(1) mustEqual fourthCard

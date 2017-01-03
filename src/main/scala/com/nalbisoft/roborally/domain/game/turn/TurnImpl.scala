@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Vincent Nalbone 2016
+ * Copyright (c) Vincent Nalbone 2017
  */
 
 package com.nalbisoft.roborally.domain.game.turn
@@ -48,7 +48,15 @@ class TurnImpl(players: Seq[Player], floor: FactoryFloor, stepFactory: TurnStepF
     turnStarted = true
   }
 
-  def dealCards(player: Player, deck: CardDeck): Try[Unit] = {
+  def dealCards(players: Seq[Player], deck: CardDeck): Try[Unit] = {
+
+    def assertDealCardsOkForAll() = {
+      val xs = players map { p =>
+        assertDealCardsOk(p)
+      }
+      Try(xs foreach (_.get))
+    }
+
     def assertDealCardsOk(player: Player): Try[Unit] = {
       import com.nalbisoft.util.enrichers.EnrichedBoolean
 
@@ -60,10 +68,10 @@ class TurnImpl(players: Seq[Player], floor: FactoryFloor, stepFactory: TurnStepF
     }
 
     for (
-      _ <- assertDealCardsOk(player);
-      _ <- dealCardsStep.dealCards(player, deck)
+      _ <- assertDealCardsOkForAll();
+      _ <- dealCardsStep.dealCards(players, deck)
     ) yield {
-      setup.completeDealCards(player)
+      players foreach setup.completeDealCards
     }
   }
 

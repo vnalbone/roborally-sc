@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Vincent Nalbone 2016
+ * Copyright (c) Vincent Nalbone 2017
  */
 
 package com.nalbisoft.roborally.domain.game.turn
@@ -10,8 +10,9 @@ import com.nalbisoft.roborally.domain.game.Player
 import scala.util.Try
 
 case object DealCardsStepImpl extends DealCardsStep {
-  def dealCards(player: Player, deck: CardDeck): Try[Unit] = {
-    val hand = deck.deal(1, 9) map (h => h(0))
-    hand map { h => player.acceptProgramCards(h.cards) }
+  def dealCards(players: Seq[Player], deck: CardDeck): Try[Unit] = {
+    deck.deal(players, 9) map { hands =>
+      hands foreach { case (p, h) => p.acceptProgramCards(h.cards) }
+    }
   }
 }

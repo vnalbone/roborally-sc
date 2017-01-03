@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Vincent Nalbone 2016
+ * Copyright (c) Vincent Nalbone 2017
  */
 
 package pub.com.nalbisoft.roborally.domain.game
@@ -7,19 +7,24 @@ package pub.com.nalbisoft.roborally.domain.game
 import com.nalbisoft.roborally.domain.game.turn.{TurnFactory, TurnFactoryImpl}
 import com.nalbisoft.roborally.domain.game._
 import mock.com.nalbisoft.roborally.domain.TestData._
-import mock.com.nalbisoft.roborally.domain.game.TurnSpy
+import mock.com.nalbisoft.roborally.domain.game.{PlayerSpy, TurnSpy}
 import mock.com.nalbisoft.test.BaseSpecs2Test
 import pub.com.nalbisoft.roborally.domain.game.turn.StubTurnFactory
 
 class GameTest extends BaseSpecs2Test {
 
   class NewGameScope extends Scope {
+    val player1 = PlayerSpy(PlayerId("1"), "Bob")
+    val player2 = PlayerSpy(PlayerId("2"), "John")
+
     val game = new Game(SomeFloor, TurnFactoryImpl)
   }
 
   class ValidGameScope extends Scope {
-    val player1 = SomePlayer
-    val player2 = SomeOtherPlayer
+
+    val player1 = PlayerSpy(PlayerId("1"), "Bob")
+    val player2 = PlayerSpy(PlayerId("2"), "John")
+    val nonplayer = PlayerSpy(PlayerId("3"), "Jane")
 
     val game = newValidGame(player1, player2, TurnFactoryImpl)
   }
@@ -28,7 +33,7 @@ class GameTest extends BaseSpecs2Test {
     "fail when game is already started" in new ValidGameScope {
       game.start
 
-      game.addPlayer(YetAnotherPlayer).assertFail[GameAlreadyStartedException]
+      game.addPlayer(nonplayer).assertFail[GameAlreadyStartedException]
     }
 
     "fail when there are already 8 players" in new NewGameScope {
@@ -45,9 +50,9 @@ class GameTest extends BaseSpecs2Test {
     }
 
     "fail if the same player is added twice" in new NewGameScope {
-      game.addPlayer(SomePlayer)
+      game.addPlayer(player1)
 
-      game.addPlayer(SomePlayer).assertFail[DuplicatePlayerException]
+      game.addPlayer(player1).assertFail[DuplicatePlayerException]
     }
 
     "add new players when game is not yet started" in new NewGameScope {
@@ -83,7 +88,7 @@ class GameTest extends BaseSpecs2Test {
       game.start
       game.start.assertFail[NotEnoughPlayersException]
 
-      game.addPlayer(SomePlayer)
+      game.addPlayer(player1)
       game.start.assertFail[NotEnoughPlayersException]
     }
 
@@ -102,7 +107,10 @@ class GameTest extends BaseSpecs2Test {
       val turnSpy = new TurnSpy()
       val tf = new StubTurnFactory(turnSpy)
 
-      val game = newValidGame(SomePlayer, SomeOtherPlayer, tf)
+      val player1 = PlayerSpy(PlayerId("1"), "Bob")
+      val player2 = PlayerSpy(PlayerId("2"), "John")
+
+      val game = newValidGame(player1, player2, tf)
 
       game.start
       game.startNewTurn()

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Vincent Nalbone 2017
+ */
+
 package mock.com.nalbisoft.test
 
 import org.specs2.matcher.{Expectable, MatchResult, Matcher}
@@ -53,7 +57,7 @@ class BaseSpecs2Test extends org.specs2.mutable.Specification {
 
   }
 
-  def assertSuccessfulFuture(future: Future[_]) = {
+  def assertSuccessfulFuture(future: Future[_]): MatchResult[Any] = {
     future.waitForResult //If there is a failure it would be thrown here
     "" mustEqual ""
   }

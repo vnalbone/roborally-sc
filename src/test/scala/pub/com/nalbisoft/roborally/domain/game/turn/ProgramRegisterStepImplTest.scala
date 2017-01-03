@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Vincent Nalbone 2017
+ */
+
 package pub.com.nalbisoft.roborally.domain.game.turn
 
 import com.nalbisoft.roborally.domain.game.turn._
@@ -13,7 +17,7 @@ class ProgramRegisterStepImplTest extends BaseSpecs2Test {
 
   "Programming registers" should {
     "have registers programmed in proper order when all goes well and no locked registers" in new ProgramRegisterStepScope {
-      val regResultTry = step.programRegisters(player, cardSet)
+      val regResultTry = step.programRegisters(player1, cardSet)
 
       regResultTry must beSuccessfulTry
       regResultTry.get mustEqual SomeRegSet
