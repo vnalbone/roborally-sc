@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Vincent Nalbone 2017
+ */
+
 package com.nalbisoft.roborally.domain
 
 import com.nalbisoft.roborally.domain.RegisterNumbers._
@@ -10,7 +14,7 @@ object RegisterNumbers {
   object Four extends RegisterNumber(3)
   object Five extends RegisterNumber(4)
 
-  def asSeq = Seq(One, Two, Three, Four, Five)
+  def all = Seq(One, Two, Three, Four, Five)
 }
 
 sealed class RegisterNumber(val index: Int) {

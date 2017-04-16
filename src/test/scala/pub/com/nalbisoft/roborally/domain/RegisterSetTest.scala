@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Vincent Nalbone 2017
+ */
+
 package pub.com.nalbisoft.roborally.domain
 
 import com.nalbisoft.roborally.domain.{RegisterNumbers, RegisterNumber, RegisterSet}
@@ -10,7 +14,7 @@ class RegisterSetTest extends Specification {
     "set the program for card for each register" in {
       val regSet = new RegisterSet()
 
-      RegisterNumbers.asSeq foreach { regNum =>
+      RegisterNumbers.all foreach { regNum =>
         testRegister(regSet, regNum)
       }
       success

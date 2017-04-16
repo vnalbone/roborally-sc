@@ -39,7 +39,7 @@ class TurnImpl(players: Seq[Player], floor: FactoryFloor, stepFactory: TurnStepF
   private var turnStarted: Boolean = false
   private var turnEnded: Boolean = false
 
-  private var regNums = RegisterNumbers.asSeq.iterator
+  private var regNums = RegisterNumbers.all.iterator
 
   private val dealCardsStep = stepFactory.createDealCardsStep
   private val programRegistersStep = stepFactory.createProgramRegistersStep
