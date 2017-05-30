@@ -19,6 +19,10 @@ case class PlayerImpl(id: PlayerId, name: String,
   override def acceptProgrammedRegister(newRegister: RegisterSet): Unit = {
     register = Some(newRegister)
   }
+
+  override def revealCards(playerCards: Seq[PlayerCard]): Unit = {
+    //TODO Implement
+  }
 }
 
 trait Player {
@@ -27,7 +31,11 @@ trait Player {
 
   def programCards: Option[Seq[ProgramCard]]
 
+  def register: Option[RegisterSet]
+
   def acceptProgramCards(cards: Seq[ProgramCard])
 
   def acceptProgrammedRegister(register: RegisterSet)
+
+  def revealCards(playerCards: Seq[PlayerCard])
 }
