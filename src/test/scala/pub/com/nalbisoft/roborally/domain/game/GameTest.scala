@@ -1,9 +1,10 @@
 /*
- * Copyright (c) Vincent Nalbone 2017
+ * Copyright (c) Vincent Nalbone 2018
  */
 
 package pub.com.nalbisoft.roborally.domain.game
 
+import com.nalbisoft.roborally.domain.Robot
 import com.nalbisoft.roborally.domain.game.turn.{TurnFactory, TurnFactoryImpl}
 import com.nalbisoft.roborally.domain.game._
 import mock.com.nalbisoft.roborally.domain.TestData._
@@ -14,17 +15,17 @@ import pub.com.nalbisoft.roborally.domain.game.turn.StubTurnFactory
 class GameTest extends BaseSpecs2Test {
 
   class NewGameScope extends Scope {
-    val player1 = PlayerSpy(PlayerId("1"), "Bob")
-    val player2 = PlayerSpy(PlayerId("2"), "John")
+    val player1 = SomePlayer
+    val player2 = SomeOtherPlayer
 
     val game = new Game(SomeFloor, TurnFactoryImpl)
   }
 
   class ValidGameScope extends Scope {
 
-    val player1 = PlayerSpy(PlayerId("1"), "Bob")
-    val player2 = PlayerSpy(PlayerId("2"), "John")
-    val nonplayer = PlayerSpy(PlayerId("3"), "Jane")
+    val player1 = SomePlayer
+    val player2 = SomeOtherPlayer
+    val nonplayer = YetAnotherPlayer
 
     val game = newValidGame(player1, player2, TurnFactoryImpl)
   }
@@ -67,11 +68,11 @@ class GameTest extends BaseSpecs2Test {
     }
 
     def newPlayer(num: Int): PlayerImpl = {
-      PlayerImpl(PlayerId(num.toString), num.toString)
+      PlayerImpl(PlayerId(num.toString), num.toString, new Robot(num + "", null))
     }
 
     def testAddedPlayer(game: Game, num: Int) = {
-      val player = PlayerImpl(PlayerId(num.toString), num.toString)
+      val player = PlayerImpl(PlayerId(num.toString), num.toString, new Robot(num + "", null))
       game.addPlayer(player) must beSuccessfulTry
 
       game.players must haveSize(num)
@@ -107,8 +108,8 @@ class GameTest extends BaseSpecs2Test {
       val turnSpy = new TurnSpy()
       val tf = new StubTurnFactory(turnSpy)
 
-      val player1 = PlayerSpy(PlayerId("1"), "Bob")
-      val player2 = PlayerSpy(PlayerId("2"), "John")
+      val player1 = SomePlayer
+      val player2 = SomeOtherPlayer
 
       val game = newValidGame(player1, player2, tf)
 

@@ -1,15 +1,15 @@
 /*
- * Copyright (c) Vincent Nalbone 2017
+ * Copyright (c) Vincent Nalbone 2018
  */
 
 package com.nalbisoft.roborally.domain.game
 
-import com.nalbisoft.roborally.domain.RegisterSet
+import com.nalbisoft.roborally.domain.{RegisterSet, Robot}
 import com.nalbisoft.roborally.domain.core.card.ProgramCard
 
 case class PlayerId(id: String)
 
-case class PlayerImpl(id: PlayerId, name: String,
+case class PlayerImpl(id: PlayerId, name: String, robot: Robot,
                       var programCards: Option[Seq[ProgramCard]] = None,
                       var register: Option[RegisterSet] = None) extends Player {
   override def acceptProgramCards(cards: Seq[ProgramCard]) = {
@@ -28,6 +28,7 @@ case class PlayerImpl(id: PlayerId, name: String,
 trait Player {
   val id: PlayerId
   val name: String
+  val robot: Robot
 
   def programCards: Option[Seq[ProgramCard]]
 

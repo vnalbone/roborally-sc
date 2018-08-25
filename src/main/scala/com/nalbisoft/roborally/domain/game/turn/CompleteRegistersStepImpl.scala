@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Vincent Nalbone 2017
+ * Copyright (c) Vincent Nalbone 2018
  */
 
 package com.nalbisoft.roborally.domain.game.turn
@@ -18,6 +18,12 @@ object CompleteRegistersStepImpl extends CompleteRegistersStep {
     def allPlayersProgrammed(): Boolean = {
       players.map(p =>
         p.register.isDefined && p.register.get.isProgrammed(register)
+      ).forall(p => p)
+    }
+
+    def allPlayersOnBoard(): Boolean = {
+      players.map(p =>
+        floor.contains(p.robot)
       ).forall(p => p)
     }
 
@@ -43,3 +49,5 @@ object CompleteRegistersStepImpl extends CompleteRegistersStep {
 }
 
 class RegistersNotProgrammedException() extends GameException("All players must have their registers programmed")
+
+class PlayerNotOnFloorException() extends GameException("All players must be added to the floor")

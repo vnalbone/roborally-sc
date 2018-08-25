@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Vincent Nalbone 2018
+ */
+
 package com.nalbisoft.roborally.domain
 
 trait FactoryFloor {
@@ -30,6 +34,14 @@ trait FactoryFloor {
    * @return
    */
   def locationOf(robot: Robot): Location
+
+  /**
+    * Returns true if floor contains robot
+    *
+    * @param robot
+    * @return
+    */
+  def contains(robot: Robot): Boolean
 }
 
 class BasicFactoryFloor(val maxRobots: Int) extends FactoryFloor {
@@ -62,5 +74,9 @@ class BasicFactoryFloor(val maxRobots: Int) extends FactoryFloor {
     }
 
     robotLoc(robot)
+  }
+
+  override def contains(robot: Robot): Boolean = {
+    robotLoc.contains(robot)
   }
 }

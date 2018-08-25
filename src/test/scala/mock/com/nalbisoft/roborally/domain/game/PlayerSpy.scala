@@ -1,15 +1,16 @@
 /*
- * Copyright (c) Vincent Nalbone 2017
+ * Copyright (c) Vincent Nalbone 2018
  */
 
 package mock.com.nalbisoft.roborally.domain.game
 
-import com.nalbisoft.roborally.domain.RegisterSet
+import com.nalbisoft.roborally.domain.{RegisterSet, Robot}
 import com.nalbisoft.roborally.domain.core.card.ProgramCard
 import com.nalbisoft.roborally.domain.game.{Player, PlayerCard, PlayerId}
 
 case class PlayerSpy(id: PlayerId,
                      name: String,
+                     robot: Robot,
                      programCards: Option[Seq[ProgramCard]] = None,
                      register: Option[RegisterSet] = None) extends Player {
   var passedProgramCards: Option[Seq[ProgramCard]] = None
@@ -17,11 +18,11 @@ case class PlayerSpy(id: PlayerId,
   var passedPlayerCards: Option[Seq[PlayerCard]] = None
 
   def withRegister(reg: RegisterSet) = {
-    PlayerSpy(id, name, programCards, Some(reg))
+    PlayerSpy(id, name, robot, programCards, Some(reg))
   }
 
   def withProgramCards(c: Seq[ProgramCard]) = {
-    PlayerSpy(id, name, Some(c), register)
+    PlayerSpy(id, name, robot, Some(c), register)
   }
 
   override def acceptProgramCards(cards: Seq[ProgramCard]) = {

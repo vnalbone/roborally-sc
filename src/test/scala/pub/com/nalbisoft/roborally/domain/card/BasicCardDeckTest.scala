@@ -1,10 +1,10 @@
 /*
- * Copyright (c) Vincent Nalbone 2017
+ * Copyright (c) Vincent Nalbone 2018
  */
 
 package pub.com.nalbisoft.roborally.domain.card
 
-import com.nalbisoft.roborally.domain.core.card.{BasicCardDeck, DeckEmptyException, Move1}
+import com.nalbisoft.roborally.domain.core.card.{BasicCardDeck, DeckEmptyException}
 import com.nalbisoft.roborally.domain.game.{PlayerId, PlayerImpl}
 import mock.com.nalbisoft.roborally.domain.TestData._
 import mock.com.nalbisoft.test.BaseSpecs2Test
@@ -24,9 +24,6 @@ class BasicCardDeckTest extends BaseSpecs2Test {
     val cards = Seq(firstCard, secondCard, thirdCard, fourthCard)
 
     val deck = new BasicCardDeck(cards)
-
-    val player1 = PlayerImpl(PlayerId("1"), "Bob")
-    val player2 = PlayerImpl(PlayerId("2"), "John")
   }
 
   "Calling count" should {

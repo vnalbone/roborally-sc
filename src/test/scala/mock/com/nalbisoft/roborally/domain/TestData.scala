@@ -1,8 +1,8 @@
 /*
- * Copyright (c) Vincent Nalbone 2017
+ * Copyright (c) Vincent Nalbone 2018
  */
 
-package mock.com.nalbisoft.roborally.domain
+package mock.com.nalbisoft.roborally.domain 
 
 import com.nalbisoft.roborally.domain.RegisterNumbers._
 import com.nalbisoft.roborally.domain._
@@ -20,6 +20,7 @@ object TestData {
 
   val SomeRobot = new Robot("Twonky", new RegisterSet())
   val SomeOtherRobot = new Robot("Trundle Bot", new RegisterSet())
+  val YetAnotherRobot = new Robot("Ifore", new RegisterSet())
   val SomeMCard = ProgramCard(100, Move1)
   val SomeLoc = SouthLoc
   val SomeFloor = new BasicFactoryFloor(8)
@@ -59,11 +60,11 @@ object TestData {
   val p1Data = new PlayerTestData(SomePlayer, SomeRobot, SomeCards)
   val p2Data = new PlayerTestData(SomeOtherPlayer, SomeOtherRobot, SomeOtherCards)
 
-  def SomePlayer = PlayerSpy(PlayerId("1"), "Bob")
+  def SomePlayer = PlayerSpy(PlayerId("1"), "Bob", SomeRobot)
 
-  def SomeOtherPlayer = PlayerSpy(PlayerId("2"), "John")
+  def SomeOtherPlayer = PlayerSpy(PlayerId("2"), "John", SomeOtherRobot)
 
-  def YetAnotherPlayer = PlayerSpy(PlayerId("3"), "Jim")
+  def YetAnotherPlayer = PlayerSpy(PlayerId("3"), "Jim", SomeRobot)
 }
 
 class PlayerTestData(p: PlayerSpy, val robot: Robot, val cards: Seq[ProgramCard]) {

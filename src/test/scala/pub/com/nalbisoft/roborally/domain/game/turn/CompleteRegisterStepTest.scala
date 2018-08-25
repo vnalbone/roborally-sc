@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Vincent Nalbone 2017
+ * Copyright (c) Vincent Nalbone 2018
  */
 
 package pub.com.nalbisoft.roborally.domain.game.turn
@@ -9,13 +9,7 @@ import com.nalbisoft.roborally.domain.game.turn.{CompleteRegistersStepImpl, Regi
 import mock.com.nalbisoft.test.BaseSpecs2Test
 import mock.com.nalbisoft.roborally.domain.TestData._
 
-/**
-  *A. Reveal Program Cards
-  *B. Robots Move
-  *C. Board Elements Move
-  *D. Lasers Fire
-  *E. Touch Checkpoints
-  */
+
 class CompleteRegisterStepTest extends BaseSpecs2Test {
 
   class CompleteRegisterStepScope extends BaseStepScope {
@@ -35,6 +29,10 @@ class CompleteRegisterStepTest extends BaseSpecs2Test {
   "Completing a register" should {
     "fail if registers have not been programmed" in new CompleteRegisterStepScope {
       step.completeRegisters(Seq(SomePlayer, SomeOtherPlayer), One, floor).assertFail[RegistersNotProgrammedException]
+    }
+
+    "fail if players have not been added to board" in new CompleteRegisterStepScope {
+      step.completeRegisters(players, One, floor).assertFail[RegistersNotProgrammedException]
     }
 
     "cause the appropriate reveal to be called on each player" in new CompleteRegisterStepScope {
